@@ -276,6 +276,8 @@ class _AddBudgetState extends State<AddBudget> {
                     const SizedBox(
                       height: 20,
                     ),
+                    selectedContainerIndex == 1 ?
+                    //container for the income
                     Container(
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
@@ -299,7 +301,7 @@ class _AddBudgetState extends State<AddBudget> {
                                       color: Colors.grey,
                                     ),
                                   ),
-                                  snapshot2.categoryName.isEmpty
+                                  snapshot2.incomeCategoryName.isEmpty
                                       ? Text(
                                           "Others",
                                           style: TextStyle(
@@ -307,7 +309,80 @@ class _AddBudgetState extends State<AddBudget> {
                                               fontWeight: FontWeight.bold),
                                         )
                                       : Text(
-                                          snapshot2.categoryName,
+                                          snapshot2.incomeCategoryName,
+                                          style: TextStyle(
+                                              color: black,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            SizedBox(
+                              height:  100 ,
+                              child: Wrap(
+                                children: List.generate(
+                                  isExpanded
+                                      ? 4
+                                      : snapshot2.incomeContainerList.length,
+                                  (index) {
+                                    return ContainerAddBudget(
+                                        icon:
+                                            snapshot2.incomeContainerList[index].icon,
+                                        text:
+                                            snapshot2.incomeContainerList[index].text,
+                                        bgcolor: snapshot2
+                                            .incomeContainerList[index].bgcolor,
+                                        containerIndex: snapshot2
+                                            .incomeContainerList[index]
+                                            .containerIndex,
+                                        boolean: snapshot2
+                                            .incomeContainerList[index].boolean);
+                                  },
+                                ),
+                              ),
+                            ),
+
+                          ],
+                        ),
+                      ),
+                    )
+                    :
+                    //container for the expense
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(10),
+                        ),
+                        border: Border.all(color: teal),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          key: widgetKey,
+                          children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  const Text(
+                                    "Categories :",
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  snapshot2.expenseCategoryName.isEmpty
+                                      ? Text(
+                                          "Others",
+                                          style: TextStyle(
+                                              color: black,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      : Text(
+                                          snapshot2.expenseCategoryName,
                                           style: TextStyle(
                                               color: black,
                                               fontWeight: FontWeight.bold),
@@ -323,21 +398,20 @@ class _AddBudgetState extends State<AddBudget> {
                               child: Wrap(
                                 children: List.generate(
                                   isExpanded
-                                      ? 6
-                                      : snapshot2.containerList.length,
+                                      ? 5
+                                      : snapshot2.expenseContainerList.length,
                                   (index) {
                                     return ContainerAddBudget(
                                         icon:
-                                            snapshot2.containerList[index].icon,
+                                            snapshot2.expenseContainerList[index].icon,
                                         text:
-                                            snapshot2.containerList[index].text,
+                                            snapshot2.expenseContainerList[index].text,
                                         bgcolor: snapshot2
-                                            .containerList[index].bgcolor,
-                                        containerIndex: snapshot2
-                                            .containerList[index]
-                                            .containerIndex,
+                                            .expenseContainerList[index].bgcolor,
+                                        containerIndex: index,
+
                                         boolean: snapshot2
-                                            .containerList[index].boolean);
+                                            .expenseContainerList[index].boolean);
                                   },
                                 ),
                               ),

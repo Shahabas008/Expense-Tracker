@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:money_management_app/UI/addBugdet/addbudgetmodel.dart';
 
 class AddBudgetProvider extends ChangeNotifier {
-  List<AddBudgetModel> containerList = [
+  List<AddBudgetModel> expenseContainerList = [
     AddBudgetModel(
       false,
       0,
@@ -89,17 +89,36 @@ class AddBudgetProvider extends ChangeNotifier {
       Icons.money_off_csred_outlined,
     ),
   ];
+  List<AddBudgetModel> incomeContainerList = [
+    AddBudgetModel(
+      false,
+      0,
+      "Others",
+      Colors.grey,
+      Icons.note_outlined,
+    ),
+    AddBudgetModel(
+        false, 1, 'Salary', Colors.lightGreen, Icons.payment_outlined),
+    AddBudgetModel(
+        false, 2, 'Sales', Colors.pink.shade300, Icons.trending_up_sharp),
+    AddBudgetModel(
+        false, 3, 'Awards', Colors.tealAccent, Icons.language_outlined),
+    AddBudgetModel(false, 4, 'Business', Colors.yellowAccent, Icons.euro_outlined),
+  ];
 
   //making the container change the color.
   int selectedIndex = 0;
-  String categoryName = '';
+  String expenseCategoryName = '';
+  String incomeCategoryName = '';
+
   void selectedContainerColorChange(int newIndex) {
     selectedIndex = newIndex;
-    for (int i = 0; i < containerList.length; i++) {
-      containerList[i].boolean = false;
+    for (int i = 0; i < expenseContainerList.length; i++) {
+      expenseContainerList[i].boolean = false;
     }
-    containerList[newIndex].boolean = true;
-    categoryName = containerList[newIndex].text;
+    expenseContainerList[newIndex].boolean = true;
+    expenseCategoryName = expenseContainerList[newIndex].text;
+    // incomeCategoryName = incomeContainerList[newIndex].text;
     notifyListeners();
   }
 }
