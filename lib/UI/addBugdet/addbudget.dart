@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:money_management_app/UI/addBugdet/addBudgetprovider.dart';
 import 'package:money_management_app/UI/home/model.dart';
@@ -293,12 +291,28 @@ class _AddBudgetState extends State<AddBudget> {
                           children: [
                             Align(
                               alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Categories :",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: black,
-                                ),
+                              child: Row(
+                                children: [
+                                  const Text(
+                                    "Categories :",
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  snapshot2.categoryName.isEmpty
+                                      ? Text(
+                                          "Others",
+                                          style: TextStyle(
+                                              color: black,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                      : Text(
+                                          snapshot2.categoryName,
+                                          style: TextStyle(
+                                              color: black,
+                                              fontWeight: FontWeight.bold),
+                                        )
+                                ],
                               ),
                             ),
                             const SizedBox(
