@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:money_management_app/UI/addBugdet/addBudgetprovider.dart';
 import 'package:money_management_app/UI/home/model.dart';
@@ -26,6 +28,7 @@ class _AddBudgetState extends State<AddBudget> {
   bool isExpanded = true;
   GlobalKey widgetKey = GlobalKey();
   double childHeight = 0.0;
+  late IconData iconCategory;
 
   void changeColor(int containerIndex) {
     setState(() {
@@ -276,199 +279,386 @@ class _AddBudgetState extends State<AddBudget> {
                     const SizedBox(
                       height: 20,
                     ),
-                    selectedContainerIndex == 1 ?
-                    //container for the income
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                        border: Border.all(color: teal),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          key: widgetKey,
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Row(
-                                children: [
-                                  const Text(
-                                    "Categories :",
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  snapshot2.incomeCategoryName.isEmpty
-                                      ? Text(
-                                          "Others",
-                                          style: TextStyle(
-                                              color: black,
-                                              fontWeight: FontWeight.bold),
-                                        )
-                                      : Text(
-                                          snapshot2.incomeCategoryName,
-                                          style: TextStyle(
-                                              color: black,
-                                              fontWeight: FontWeight.bold),
-                                        )
-                                ],
+                    selectedContainerIndex == 1
+                        ?
+                        //container for the income
+                        Container(
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(10),
                               ),
+                              border: Border.all(color: teal),
                             ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            SizedBox(
-                              height:  100 ,
-                              child: Wrap(
-                                children: List.generate(
-                                  isExpanded
-                                      ? 4
-                                      : snapshot2.incomeContainerList.length,
-                                  (index) {
-                                    return ContainerAddBudget(
-                                        icon:
-                                            snapshot2.incomeContainerList[index].icon,
-                                        text:
-                                            snapshot2.incomeContainerList[index].text,
-                                        bgcolor: snapshot2
-                                            .incomeContainerList[index].bgcolor,
-                                        containerIndex: snapshot2
-                                            .incomeContainerList[index]
-                                            .containerIndex,
-                                        boolean: snapshot2
-                                            .incomeContainerList[index].boolean);
-                                  },
-                                ),
-                              ),
-                            ),
-
-                          ],
-                        ),
-                      ),
-                    )
-                    :
-                    //container for the expense
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                        border: Border.all(color: teal),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          key: widgetKey,
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Row(
-                                children: [
-                                  const Text(
-                                    "Categories :",
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  snapshot2.expenseCategoryName.isEmpty
-                                      ? Text(
-                                          "Others",
-                                          style: TextStyle(
-                                              color: black,
-                                              fontWeight: FontWeight.bold),
-                                        )
-                                      : Text(
-                                          snapshot2.expenseCategoryName,
-                                          style: TextStyle(
-                                              color: black,
-                                              fontWeight: FontWeight.bold),
-                                        )
-                                ],
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            SizedBox(
-                              height: isExpanded ? 130 : childHeight + 20,
-                              child: Wrap(
-                                children: List.generate(
-                                  isExpanded
-                                      ? 5
-                                      : snapshot2.expenseContainerList.length,
-                                  (index) {
-                                    return ContainerAddBudget(
-                                        icon:
-                                            snapshot2.expenseContainerList[index].icon,
-                                        text:
-                                            snapshot2.expenseContainerList[index].text,
-                                        bgcolor: snapshot2
-                                            .expenseContainerList[index].bgcolor,
-                                        containerIndex: index,
-
-                                        boolean: snapshot2
-                                            .expenseContainerList[index].boolean);
-                                  },
-                                ),
-                              ),
-                            ),
-                            Padding(
+                            child: Padding(
                               padding: const EdgeInsets.all(10.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                              child: Column(
+                                key: widgetKey,
                                 children: [
-                                  isExpanded
-                                      ? ElevatedButton.icon(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor: white,
-                                              elevation: 0),
-                                          onPressed: () {
-                                            findHeight();
-                                            setState(() {
-                                              isExpanded = false;
-                                            });
-                                          },
-                                          icon: Icon(
-                                            Icons.arrow_downward_outlined,
-                                            size: 12,
-                                            color: black,
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      children: [
+                                        const Text(
+                                          "Categories : ",
+                                          style: TextStyle(
+                                            color: Colors.grey,
                                           ),
-                                          label: Text(
-                                            "View All",
-                                            style: TextStyle(
-                                                color: black, fontSize: 12),
-                                          ),
-                                        )
-                                      : ElevatedButton.icon(
-                                          style: ElevatedButton.styleFrom(
-                                              backgroundColor: white,
-                                              elevation: 0),
-                                          onPressed: () {
-                                            setState(() {
-                                              isExpanded = true;
-                                            });
-                                          },
-                                          icon: Icon(
-                                            Icons.arrow_upward_outlined,
-                                            size: 12,
-                                            color: black,
-                                          ),
-                                          label: Text(
-                                            "View Less",
-                                            style: TextStyle(
-                                                color: black, fontSize: 12),
-                                          )),
+                                        ),
+                                        snapshot2.incomeCategoryName.isEmpty
+                                            ? Text(
+                                                "Others",
+                                                style: TextStyle(
+                                                    color: black,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )
+                                            : Text(
+                                                snapshot2.incomeCategoryName,
+                                                style: TextStyle(
+                                                    color: black,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  SizedBox(
+                                    height: 100,
+                                    child: Wrap(
+                                      children: List.generate(
+                                        isExpanded
+                                            ? 5
+                                            : snapshot2
+                                                .incomeContainerList.length,
+                                        (index) {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              snapshot2
+                                                  .selectedContainerColorChange(
+                                                      snapshot2
+                                                          .incomeContainerList[
+                                                              index]
+                                                          .containerIndex);
+                                              iconCategory = snapshot2
+                                                  .incomeContainerList[index]
+                                                  .icon;
+                                            },
+                                            child: Container(
+                                              margin: const EdgeInsets.all(8),
+                                              padding: const EdgeInsets.only(
+                                                right: 5.0,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: snapshot2
+                                                            .incomeContainerList[
+                                                                index]
+                                                            .containerIndex ==
+                                                        snapshot2.selectedIndex
+                                                    ? snapshot2
+                                                        .incomeContainerList[
+                                                            index]
+                                                        .bgcolor
+                                                    : white,
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(20),
+                                                ),
+                                                border: Border.all(
+                                                  color: snapshot2
+                                                              .incomeContainerList[
+                                                                  index]
+                                                              .containerIndex ==
+                                                          snapshot2
+                                                              .selectedIndex
+                                                      ? snapshot2
+                                                          .incomeContainerList[
+                                                              index]
+                                                          .bgcolor
+                                                      : Colors.grey.shade500,
+                                                ),
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  CircleAvatar(
+                                                    backgroundColor: snapshot2
+                                                        .incomeContainerList[
+                                                            index]
+                                                        .bgcolor,
+                                                    radius: 15,
+                                                    child: Icon(
+                                                      snapshot2
+                                                          .incomeContainerList[
+                                                              index]
+                                                          .icon,
+                                                      size: 20,
+                                                      color: black,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  FittedBox(
+                                                    child: Text(
+                                                      snapshot2
+                                                          .incomeContainerList[
+                                                              index]
+                                                          .text,
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+
+                                          // ContainerAddBudget(
+                                          //   icon: snapshot2
+                                          //       .incomeContainerList[index]
+                                          //       .icon,
+                                          //   text: snapshot2
+                                          //       .incomeContainerList[index]
+                                          //       .text,
+                                          //   bgcolor: snapshot2
+                                          //       .incomeContainerList[index]
+                                          //       .bgcolor,
+                                          //   containerIndex: snapshot2
+                                          //       .incomeContainerList[index]
+                                          //       .containerIndex,
+                                          //   boolean: snapshot2
+                                          //       .incomeContainerList[index]
+                                          //       .boolean);
+                                        },
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
+                          )
+                        :
+                        //container for the expense
+                        Container(
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(10),
+                              ),
+                              border: Border.all(color: teal),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                key: widgetKey,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      children: [
+                                        const Text(
+                                          "Categories :",
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                        snapshot2.expenseCategoryName.isEmpty
+                                            ? Text(
+                                                "Others",
+                                                style: TextStyle(
+                                                    color: black,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )
+                                            : Text(
+                                                snapshot2.expenseCategoryName,
+                                                style: TextStyle(
+                                                    color: black,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              )
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  SizedBox(
+                                    height: isExpanded ? 130 : childHeight + 20,
+                                    child: Wrap(
+                                      children: List.generate(
+                                        isExpanded
+                                            ? 5
+                                            : snapshot2
+                                                .expenseContainerList.length,
+                                        (index) {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              snapshot2
+                                                  .selectedContainerColorChange(
+                                                      snapshot2
+                                                          .expenseContainerList[
+                                                              index]
+                                                          .containerIndex);
+                                              iconCategory = snapshot2
+                                                  .expenseContainerList[index]
+                                                  .icon;
+                                            },
+                                            child: Container(
+                                              margin: const EdgeInsets.all(8),
+                                              padding: const EdgeInsets.only(
+                                                right: 5.0,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                color: snapshot2
+                                                            .expenseContainerList[
+                                                                index]
+                                                            .containerIndex ==
+                                                        snapshot2.selectedIndex
+                                                    ? snapshot2
+                                                        .expenseContainerList[
+                                                            index]
+                                                        .bgcolor
+                                                    : white,
+                                                borderRadius:
+                                                    const BorderRadius.all(
+                                                  Radius.circular(20),
+                                                ),
+                                                border: Border.all(
+                                                  color: snapshot2
+                                                              .expenseContainerList[
+                                                                  index]
+                                                              .containerIndex ==
+                                                          snapshot2
+                                                              .selectedIndex
+                                                      ? snapshot2
+                                                          .expenseContainerList[
+                                                              index]
+                                                          .bgcolor
+                                                      : Colors.grey.shade500,
+                                                ),
+                                              ),
+                                              child: Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  CircleAvatar(
+                                                    backgroundColor: snapshot2
+                                                        .expenseContainerList[
+                                                            index]
+                                                        .bgcolor,
+                                                    radius: 15,
+                                                    child: Icon(
+                                                      snapshot2
+                                                          .expenseContainerList[
+                                                              index]
+                                                          .icon,
+                                                      size: 20,
+                                                      color: black,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 5,
+                                                  ),
+                                                  FittedBox(
+                                                    child: Text(
+                                                      snapshot2
+                                                          .expenseContainerList[
+                                                              index]
+                                                          .text,
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+
+                                          // ContainerAddBudget(
+                                          //     icon: snapshot2
+                                          //         .expenseContainerList[
+                                          //             index]
+                                          //         .icon,
+                                          //     text: snapshot2
+                                          //         .expenseContainerList[
+                                          //             index]
+                                          //         .text,
+                                          //     bgcolor: snapshot2
+                                          //         .expenseContainerList[
+                                          //             index]
+                                          //         .bgcolor,
+                                          //     containerIndex: index,
+                                          //     boolean: snapshot2
+                                          //         .expenseContainerList[
+                                          //             index]
+                                          //         .boolean);
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        isExpanded
+                                            ? ElevatedButton.icon(
+                                                style: ElevatedButton.styleFrom(
+                                                    backgroundColor: white,
+                                                    elevation: 0),
+                                                onPressed: () {
+                                                  findHeight();
+                                                  setState(() {
+                                                    isExpanded = false;
+                                                  });
+                                                },
+                                                icon: Icon(
+                                                  Icons.arrow_downward_outlined,
+                                                  size: 12,
+                                                  color: black,
+                                                ),
+                                                label: Text(
+                                                  "View All",
+                                                  style: TextStyle(
+                                                      color: black,
+                                                      fontSize: 12),
+                                                ),
+                                              )
+                                            : ElevatedButton.icon(
+                                                style: ElevatedButton.styleFrom(
+                                                    backgroundColor: white,
+                                                    elevation: 0),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    isExpanded = true;
+                                                  });
+                                                },
+                                                icon: Icon(
+                                                  Icons.arrow_upward_outlined,
+                                                  size: 12,
+                                                  color: black,
+                                                ),
+                                                label: Text(
+                                                  "View Less",
+                                                  style: TextStyle(
+                                                      color: black,
+                                                      fontSize: 12),
+                                                )),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                     const SizedBox(
                       height: 50,
                     ),
@@ -483,6 +673,8 @@ class _AddBudgetState extends State<AddBudget> {
                             noteController.text.trim(),
                             titleController.text.trim(),
                             selectedContainerIndex,
+                            iconCategory,
+                            //saving the icon to access in the homepage.
                           );
                           selectedContainerIndex == 1
                               ? snapshot.addingIncome(access, context)

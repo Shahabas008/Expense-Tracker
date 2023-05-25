@@ -3,14 +3,15 @@ import 'package:money_management_app/UI/addBugdet/addbudget.dart';
 import 'package:money_management_app/UI/home/provider.dart';
 import 'package:provider/provider.dart';
 import '../../utils/colors.dart';
+import '../addBugdet/addBudgetprovider.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AddListProvider>(
-      builder: (context, snapshot, _) {
+    return Consumer2<AddListProvider, AddBudgetProvider>(
+      builder: (context, snapshot, snapshot2, _) {
         return Scaffold(
           backgroundColor: white,
           appBar: AppBar(
@@ -218,11 +219,13 @@ class HomePage extends StatelessWidget {
                             return ListTile(
                               shape: RoundedRectangleBorder(
                                 side: BorderSide(width: 2, color: primary),
-                                borderRadius:
-                                    BorderRadius.circular(20), //<-- SEE HERE
+                                borderRadius: BorderRadius.circular(20),
                               ),
-                              // tileColor: primary,
-                              // leading: Image.asset(""),
+                              leading: Icon(
+                                snapshot
+                                    .incomeTextFormValues[index].categoryIcon,
+                              ),
+                              //display the category icon here
                               subtitle: Text(
                                   snapshot.incomeTextFormValues[index].note),
                               title: Text(

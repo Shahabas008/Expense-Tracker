@@ -103,13 +103,15 @@ class AddBudgetProvider extends ChangeNotifier {
         false, 2, 'Sales', Colors.pink.shade300, Icons.trending_up_sharp),
     AddBudgetModel(
         false, 3, 'Awards', Colors.tealAccent, Icons.language_outlined),
-    AddBudgetModel(false, 4, 'Business', Colors.yellowAccent, Icons.euro_outlined),
+    AddBudgetModel(
+        false, 4, 'Business', Colors.yellowAccent, Icons.euro_outlined),
   ];
 
   //making the container change the color.
   int selectedIndex = 0;
   String expenseCategoryName = '';
   String incomeCategoryName = '';
+  IconData iconOfCategory = Icons.abc;
 
   void selectedContainerColorChange(int newIndex) {
     selectedIndex = newIndex;
@@ -118,7 +120,8 @@ class AddBudgetProvider extends ChangeNotifier {
     }
     expenseContainerList[newIndex].boolean = true;
     expenseCategoryName = expenseContainerList[newIndex].text;
-    // incomeCategoryName = incomeContainerList[newIndex].text;
+    incomeCategoryName = incomeContainerList[newIndex].text;
+    iconOfCategory =  incomeContainerList[newIndex].icon;
     notifyListeners();
   }
 }

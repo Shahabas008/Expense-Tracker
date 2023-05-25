@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'model.dart';
@@ -29,7 +27,7 @@ class AddListProvider extends ChangeNotifier {
     balanceHome = balanceHome - value.amount;
     expenseHome += value.amount;
     selectedIndexHome = value.selectedIndexHome;
-    notifyListeners();
     Navigator.pop(context);
+    notifyListeners();
   }
 }
