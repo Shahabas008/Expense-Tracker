@@ -107,21 +107,39 @@ class AddBudgetProvider extends ChangeNotifier {
         false, 4, 'Business', Colors.yellowAccent, Icons.euro_outlined),
   ];
 
-  //making the container change the color.
-  int selectedIndex = 0;
-  String expenseCategoryName = '';
+  //INCOME SECTION
+  int incomeSelectedIndex = 0;
   String incomeCategoryName = '';
-  IconData iconOfCategory = Icons.abc;
+  IconData incomeIconOfCategory = Icons.abc;
 
-  void selectedContainerColorChange(int newIndex) {
-    selectedIndex = newIndex;
-    for (int i = 0; i < expenseContainerList.length; i++) {
-      expenseContainerList[i].boolean = false;
+  void incomeSelectedContainerColorChange(int newIndex) {
+    incomeSelectedIndex = newIndex;
+    if (newIndex >= 0 && newIndex < incomeContainerList.length) {
+      for (int i = 0; i < incomeContainerList.length; i++) {
+        incomeContainerList[i].boolean = false;
+      }
+      incomeContainerList[newIndex].boolean = true;
+      incomeCategoryName = incomeContainerList[newIndex].text;
+      incomeIconOfCategory = incomeContainerList[newIndex].icon;
+      notifyListeners();
     }
-    expenseContainerList[newIndex].boolean = true;
-    expenseCategoryName = expenseContainerList[newIndex].text;
-    incomeCategoryName = incomeContainerList[newIndex].text;
-    iconOfCategory =  incomeContainerList[newIndex].icon;
-    notifyListeners();
+  }
+
+//EXPENSE SECTION
+  int expenseSelectedIndex = 0;
+  String expenseCategoryName = '';
+  IconData expenseIconOfCategory = Icons.abc;
+
+  void expenseSelectedContainerColorChange(int newIndex) {
+    expenseSelectedIndex = newIndex;
+    if (newIndex >= 0 && newIndex < expenseContainerList.length) {
+      for (int i = 0; i < expenseContainerList.length; i++) {
+        expenseContainerList[i].boolean = false;
+      }
+      expenseContainerList[newIndex].boolean = true;
+      expenseCategoryName = expenseContainerList[newIndex].text;
+      expenseIconOfCategory = expenseContainerList[newIndex].icon;
+      notifyListeners();
+    }
   }
 }

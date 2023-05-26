@@ -6,7 +6,8 @@ class ValueOfTextForm {
   String note;
   int selectedIndexHome;
   IconData categoryIcon;
+  Color bgColorOfContainer;
 
   ValueOfTextForm(this.amount, this.note, this.title, this.selectedIndexHome,
-      this.categoryIcon);
+      this.categoryIcon,this.bgColorOfContainer);
 }

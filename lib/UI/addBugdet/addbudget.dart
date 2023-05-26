@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:money_management_app/UI/addBugdet/addBudgetprovider.dart';
 import 'package:money_management_app/UI/home/model.dart';
 import 'package:money_management_app/UI/home/provider.dart';
-import 'package:money_management_app/widget/containerAddBudgetwidget.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/colors.dart';
+import '../budget/budget_provider.dart';
 
 class AddBudget extends StatefulWidget {
   const AddBudget({Key? key}) : super(key: key);
@@ -28,7 +28,8 @@ class _AddBudgetState extends State<AddBudget> {
   bool isExpanded = true;
   GlobalKey widgetKey = GlobalKey();
   double childHeight = 0.0;
-  late IconData iconCategory;
+  IconData iconCategory = Icons.add;
+  Color bgColorOfContainer = Colors.transparent;
 
   void changeColor(int containerIndex) {
     setState(() {
@@ -43,8 +44,8 @@ class _AddBudgetState extends State<AddBudget> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<AddListProvider, AddBudgetProvider>(
-      builder: (BuildContext context, snapshot, snapshot2, _) {
+    return Consumer3<AddListProvider, AddBudgetProvider, BudgetProvider>(
+      builder: (BuildContext context, snapshot, snapshot2, snapshot3, _) {
         return Scaffold(
           backgroundColor: white,
           appBar: AppBar(
@@ -54,9 +55,25 @@ class _AddBudgetState extends State<AddBudget> {
               "Main Account",
               style: TextStyle(color: black, fontWeight: FontWeight.bold),
             ),
-            leading: Icon(
-              Icons.wallet,
-              color: black,
+            leading: Row(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Icon(
+                    Icons.arrow_back_ios_new_outlined,
+                    color: black,
+                  ),
+                ),
+                const SizedBox(
+                  width: 8.0,
+                ),
+                Icon(
+                  Icons.wallet,
+                  color: black,
+                ),
+              ],
             ),
           ),
           body: SingleChildScrollView(
@@ -330,15 +347,12 @@ class _AddBudgetState extends State<AddBudget> {
                                     height: 100,
                                     child: Wrap(
                                       children: List.generate(
-                                        isExpanded
-                                            ? 5
-                                            : snapshot2
-                                                .incomeContainerList.length,
+                                        snapshot2.incomeContainerList.length,
                                         (index) {
                                           return GestureDetector(
                                             onTap: () {
                                               snapshot2
-                                                  .selectedContainerColorChange(
+                                                  .incomeSelectedContainerColorChange(
                                                       snapshot2
                                                           .incomeContainerList[
                                                               index]
@@ -346,6 +360,9 @@ class _AddBudgetState extends State<AddBudget> {
                                               iconCategory = snapshot2
                                                   .incomeContainerList[index]
                                                   .icon;
+                                              bgColorOfContainer = snapshot2
+                                                  .incomeContainerList[index]
+                                                  .bgcolor;
                                             },
                                             child: Container(
                                               margin: const EdgeInsets.all(8),
@@ -357,7 +374,8 @@ class _AddBudgetState extends State<AddBudget> {
                                                             .incomeContainerList[
                                                                 index]
                                                             .containerIndex ==
-                                                        snapshot2.selectedIndex
+                                                        snapshot2
+                                                            .incomeSelectedIndex
                                                     ? snapshot2
                                                         .incomeContainerList[
                                                             index]
@@ -373,7 +391,7 @@ class _AddBudgetState extends State<AddBudget> {
                                                                   index]
                                                               .containerIndex ==
                                                           snapshot2
-                                                              .selectedIndex
+                                                              .incomeSelectedIndex
                                                       ? snapshot2
                                                           .incomeContainerList[
                                                               index]
@@ -418,23 +436,6 @@ class _AddBudgetState extends State<AddBudget> {
                                               ),
                                             ),
                                           );
-
-                                          // ContainerAddBudget(
-                                          //   icon: snapshot2
-                                          //       .incomeContainerList[index]
-                                          //       .icon,
-                                          //   text: snapshot2
-                                          //       .incomeContainerList[index]
-                                          //       .text,
-                                          //   bgcolor: snapshot2
-                                          //       .incomeContainerList[index]
-                                          //       .bgcolor,
-                                          //   containerIndex: snapshot2
-                                          //       .incomeContainerList[index]
-                                          //       .containerIndex,
-                                          //   boolean: snapshot2
-                                          //       .incomeContainerList[index]
-                                          //       .boolean);
                                         },
                                       ),
                                     ),
@@ -501,7 +502,7 @@ class _AddBudgetState extends State<AddBudget> {
                                           return GestureDetector(
                                             onTap: () {
                                               snapshot2
-                                                  .selectedContainerColorChange(
+                                                  .expenseSelectedContainerColorChange(
                                                       snapshot2
                                                           .expenseContainerList[
                                                               index]
@@ -509,6 +510,9 @@ class _AddBudgetState extends State<AddBudget> {
                                               iconCategory = snapshot2
                                                   .expenseContainerList[index]
                                                   .icon;
+                                              bgColorOfContainer = snapshot2
+                                                  .expenseContainerList[index]
+                                                  .bgcolor;
                                             },
                                             child: Container(
                                               margin: const EdgeInsets.all(8),
@@ -520,7 +524,8 @@ class _AddBudgetState extends State<AddBudget> {
                                                             .expenseContainerList[
                                                                 index]
                                                             .containerIndex ==
-                                                        snapshot2.selectedIndex
+                                                        snapshot2
+                                                            .expenseSelectedIndex
                                                     ? snapshot2
                                                         .expenseContainerList[
                                                             index]
@@ -536,7 +541,7 @@ class _AddBudgetState extends State<AddBudget> {
                                                                   index]
                                                               .containerIndex ==
                                                           snapshot2
-                                                              .selectedIndex
+                                                              .expenseSelectedIndex
                                                       ? snapshot2
                                                           .expenseContainerList[
                                                               index]
@@ -581,25 +586,6 @@ class _AddBudgetState extends State<AddBudget> {
                                               ),
                                             ),
                                           );
-
-                                          // ContainerAddBudget(
-                                          //     icon: snapshot2
-                                          //         .expenseContainerList[
-                                          //             index]
-                                          //         .icon,
-                                          //     text: snapshot2
-                                          //         .expenseContainerList[
-                                          //             index]
-                                          //         .text,
-                                          //     bgcolor: snapshot2
-                                          //         .expenseContainerList[
-                                          //             index]
-                                          //         .bgcolor,
-                                          //     containerIndex: index,
-                                          //     boolean: snapshot2
-                                          //         .expenseContainerList[
-                                          //             index]
-                                          //         .boolean);
                                         },
                                       ),
                                     ),
@@ -673,12 +659,24 @@ class _AddBudgetState extends State<AddBudget> {
                             noteController.text.trim(),
                             titleController.text.trim(),
                             selectedContainerIndex,
-                            iconCategory,
                             //saving the icon to access in the homepage.
+                            iconCategory,
+                            //saving the bgColor to access in the homepage.
+                            bgColorOfContainer,
                           );
                           selectedContainerIndex == 1
                               ? snapshot.addingIncome(access, context)
                               : snapshot.addingExpense(access, context);
+
+                          /////HERE I AM WORKING HERE
+                          if (selectedContainerIndex == 2) {
+                            snapshot3.totalRemSpend(
+                              snapshot2.expenseCategoryName,
+                              spendAmount: int.parse(
+                                amountController.text.trim(),
+                              ),
+                            );
+                          }
                         }
                       },
                       child: const Text(

@@ -185,7 +185,7 @@ class HomePage extends StatelessWidget {
                     ? Column(
                         children: [
                           Image.asset(
-                            "asset/homepage.png",
+                            "asset/HOMEPAGE.png",
                             width: 250,
                             height: 250,
                           ),
@@ -217,13 +217,19 @@ class HomePage extends StatelessWidget {
                           itemCount: snapshot.incomeTextFormValues.length,
                           itemBuilder: (BuildContext context, int index) {
                             return ListTile(
+
                               shape: RoundedRectangleBorder(
                                 side: BorderSide(width: 2, color: primary),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              leading: Icon(
-                                snapshot
-                                    .incomeTextFormValues[index].categoryIcon,
+                              leading: CircleAvatar(
+                                backgroundColor:  snapshot
+                                    .incomeTextFormValues[index].bgColorOfContainer,
+                                child: Icon(
+                                  snapshot
+                                      .incomeTextFormValues[index].categoryIcon,
+                               color: black,
+                                ),
                               ),
                               //display the category icon here
                               subtitle: Text(

@@ -50,9 +50,11 @@ class BudgetPage extends StatelessWidget {
                         style: TextStyle(
                             color: black, fontWeight: FontWeight.bold),
                       ),
-                      const Text(
-                        "Spend",
-                        style: TextStyle(color: Colors.red),
+                      Text(
+                        snapshot.budgetedList.isEmpty
+                            ? "0"
+                            : "\u{20B9} ${snapshot.totalSpend}",
+                        style: const TextStyle(color: Colors.red),
                       ), // display the Spend
                     ],
                   ),
@@ -64,7 +66,9 @@ class BudgetPage extends StatelessWidget {
                             color: black, fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        "Left",
+                        snapshot.budgetedList.isEmpty
+                            ? "0"
+                            : "\u{20B9} ${snapshot.totalRemaining}",
                         style: TextStyle(color: teal),
                       ), // display the Left
                     ],
@@ -79,8 +83,8 @@ class BudgetPage extends StatelessWidget {
                       children: [
                         Image.asset(
                           "asset/notbudgeted.png",
-                          width: 100,
-                          height: 100,
+                          width: 180,
+                          height: 180,
                         ),
                         const Text(
                           "Budget Not Set For This Month",

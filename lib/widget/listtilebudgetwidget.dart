@@ -27,7 +27,7 @@ class _ListTileWidgetState extends State<ListTileWidget> {
         // Find the BudgetModel for the specific category
         BudgetModel? budgetModel = snapshot.setLimit.firstWhere(
           (model) => model.categories == widget.category,
-          orElse: () => BudgetModel(0, '', false, Icons.add),
+          orElse: () => BudgetModel(0, 0,'', false, Icons.add),
         );
         TextEditingController setLimitController = TextEditingController();
         TextEditingController updateValueController =
@@ -42,13 +42,13 @@ class _ListTileWidgetState extends State<ListTileWidget> {
             style: TextStyle(color: black, fontWeight: FontWeight.bold),
           ),
           subtitle: Text(
-            widget.isBudgeted == true
-                ? "Remaining: \u{20B9} ${budgetModel.setLimitvalue.toString()}"
+            widget.isBudgeted
+                ? "Remaining: \u{20B9} ${budgetModel.spendAmount.toString()}"
                 : "Spends: \u{20B9} 0",
             style: TextStyle(color: black),
           ),
-          trailing: widget.isBudgeted == true
-              ? GestureDetector(
+          trailing: widget.isBudgeted
+              ? InkWell(
                   onTap: () {
                     showDialog(
                       context: context,
@@ -149,7 +149,7 @@ class _ListTileWidgetState extends State<ListTileWidget> {
                     ),
                   ),
                 )
-              : GestureDetector(
+              : InkWell(
                   onTap: () {
                     showDialog(
                       context: context,
@@ -205,11 +205,18 @@ class _ListTileWidgetState extends State<ListTileWidget> {
                                   int.parse(
                                     setLimitController.text.trim(),
                                   ),
+                                  int.parse(
+                                    setLimitController.text.trim(),
+                                  ),
                                   widget.category,
                                   isBudgeted = true,
                                   widget.icon,
                                 );
                                 snapshot.settingLimit(access);
+                                snapshot.totalRemSpend(widget.category,
+                                    remAmount: int.parse(
+                                      setLimitController.text.trim(),
+                                    ));
                                 Navigator.pop(context);
                               },
                               child: Text(
