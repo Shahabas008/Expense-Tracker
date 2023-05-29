@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:money_management_app/UI/addBugdet/addBudgetprovider.dart';
+import 'package:money_management_app/UI/home/homepage.dart';
 import 'package:money_management_app/UI/home/model.dart';
 import 'package:money_management_app/UI/home/provider.dart';
 import 'package:provider/provider.dart';
@@ -10,16 +11,20 @@ import '../../utils/colors.dart';
 import '../budget/budget_provider.dart';
 
 class AddBudget extends StatefulWidget {
-  const AddBudget({Key? key}) : super(key: key);
+  const AddBudget({Key? key, this.amount, this.title, this.note})
+      : super(key: key);
+  final int? amount;
+  final String? title;
+  final String? note;
 
   @override
   State<AddBudget> createState() => _AddBudgetState();
 }
 
 class _AddBudgetState extends State<AddBudget> {
-  final amountController = TextEditingController();
-  final titleController = TextEditingController();
-  final noteController = TextEditingController();
+  TextEditingController amountController = TextEditingController();
+  TextEditingController titleController = TextEditingController();
+  TextEditingController noteController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   int selectedContainerIndex = 1;
   int selectedContainerList = 1;
@@ -30,6 +35,21 @@ class _AddBudgetState extends State<AddBudget> {
   double childHeight = 0.0;
   IconData iconCategory = Icons.add;
   Color bgColorOfContainer = Colors.transparent;
+  bool isEdit = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.title != null) {
+      isEdit = true;
+      final amount = widget.amount;
+      final title = widget.title;
+      final note = widget.note;
+      amountController.text = amount!.toString();
+      titleController.text = title!;
+      noteController.text = note!;
+    }
+  }
 
   void changeColor(int containerIndex) {
     setState(() {
@@ -75,6 +95,27 @@ class _AddBudgetState extends State<AddBudget> {
                 ),
               ],
             ),
+            actions: [
+              isEdit
+                  ? IconButton(
+                      onPressed: () {
+                        //Deleting the category from the list
+                        snapshot.incomeTextFormValues.value.removeWhere(
+                            (element) => widget.title == element.title);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const HomePage(),
+                          ),
+                        );
+                      },
+                      icon: Icon(
+                        Icons.delete_outline,
+                        color: black,
+                      ),
+                    )
+                  : Container(),
+            ],
           ),
           body: SingleChildScrollView(
             child: Form(
@@ -648,44 +689,68 @@ class _AddBudgetState extends State<AddBudget> {
                     const SizedBox(
                       height: 50,
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          backgroundColor: teal,
-                          minimumSize: const Size(350, 50)),
-                      onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                          final access = ValueOfTextForm(
-                            int.parse(amountController.text.trim()),
-                            noteController.text.trim(),
-                            titleController.text.trim(),
-                            selectedContainerIndex,
-                            //saving the icon to access in the homepage.
-                            iconCategory,
-                            //saving the bgColor to access in the homepage.
-                            bgColorOfContainer,
-                          );
-                          selectedContainerIndex == 1
-                              ? snapshot.addingIncome(access, context)
-                              : snapshot.addingExpense(access, context);
-
-                          /////HERE I AM WORKING HERE
-                          if (selectedContainerIndex == 2) {
-                            snapshot3.totalRemSpend(
-                              snapshot2.expenseCategoryName,
-                              spendAmount: int.parse(
-                                amountController.text.trim(),
+                    isEdit
+                        ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: teal,
+                                minimumSize: const Size(350, 50)),
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                snapshot.updateListElements(
+                                  titleController: titleController.text.trim(),
+                                  widgetTitle: widget.title!,
+                                  noteController: noteController.text.trim(),
+                                  widgetNote: widget.note!,
+                                  amountController:
+                                      int.parse(amountController.text.trim()),
+                                  widgetAmount: widget.amount!,
+                                );
+                              }
+                            },
+                            child: const Text(
+                              "Update",
+                              style: TextStyle(
+                                fontSize: 20,
                               ),
-                            );
-                          }
-                        }
-                      },
-                      child: const Text(
-                        "Save",
-                        style: TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
+                            ),
+                          )
+                        : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: teal,
+                                minimumSize: const Size(350, 50)),
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                final access = ValueOfTextForm(
+                                  int.parse(amountController.text.trim()),
+                                  noteController.text.trim(),
+                                  titleController.text.trim(),
+                                  selectedContainerIndex,
+                                  //saving the icon to access in the homepage.
+                                  iconCategory,
+                                  //saving the bgColor to access in the homepage.
+                                  bgColorOfContainer,
+                                );
+                                selectedContainerIndex == 1
+                                    ? snapshot.addingIncome(access, context)
+                                    : snapshot.addingExpense(access, context);
+
+                                if (selectedContainerIndex == 2) {
+                                  snapshot3.totalRemSpend(
+                                    snapshot2.expenseCategoryName,
+                                    spendAmount: int.parse(
+                                      amountController.text.trim(),
+                                    ),
+                                  );
+                                }
+                              }
+                            },
+                            child: const Text(
+                              "Save",
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
                   ],
                 ),
               ),

@@ -18,7 +18,7 @@ class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
   int _selectedIndex = 0;
 
   List pages = [
-    const HomePage(),
+     HomePage(),
     const BudgetPage(),
     const StatsPage(),
     const MorePage(),
