@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:money_management_app/UI/addBugdet/addBudgetprovider.dart';
-import 'package:money_management_app/UI/home/homepage.dart';
 import 'package:money_management_app/UI/home/model.dart';
 import 'package:money_management_app/UI/home/provider.dart';
 import 'package:provider/provider.dart';
@@ -11,29 +10,41 @@ import '../../utils/colors.dart';
 import '../budget/budget_provider.dart';
 
 class AddBudget extends StatefulWidget {
-  const AddBudget({Key? key, this.amount, this.title, this.note})
+  const AddBudget(
+      {Key? key,
+      this.incomeAmount,
+      this.expenseAmount,
+      this.title,
+      this.note,
+      this.selectedContainer,
+      this.icon,
+      this.bgColor})
       : super(key: key);
-  final int? amount;
+  final int? incomeAmount;
+  final int? expenseAmount;
   final String? title;
   final String? note;
+  final int? selectedContainer;
+  final IconData? icon;
+  final Color? bgColor;
 
   @override
   State<AddBudget> createState() => _AddBudgetState();
 }
 
 class _AddBudgetState extends State<AddBudget> {
-  TextEditingController amountController = TextEditingController();
+  TextEditingController incomeAmountController = TextEditingController();
+  TextEditingController expenseAmountController = TextEditingController();
   TextEditingController titleController = TextEditingController();
   TextEditingController noteController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   int selectedContainerIndex = 1;
-  int selectedContainerList = 1;
   Color container1Color = teal;
-  Color container2Color = Colors.transparent;
+  Color container2Color = Colors.grey;
   bool isExpanded = true;
   GlobalKey widgetKey = GlobalKey();
   double childHeight = 0.0;
-  IconData iconCategory = Icons.add;
+  IconData? iconCategory;
   Color bgColorOfContainer = Colors.transparent;
   bool isEdit = false;
 
@@ -42,12 +53,16 @@ class _AddBudgetState extends State<AddBudget> {
     super.initState();
     if (widget.title != null) {
       isEdit = true;
-      final amount = widget.amount;
+      final incomeAmount = widget.incomeAmount;
+      final expenseAmount = widget.expenseAmount;
       final title = widget.title;
       final note = widget.note;
-      amountController.text = amount!.toString();
+      final selectedWidgetContainerIndex = widget.selectedContainer;
+      incomeAmountController.text = incomeAmount!.toString();
+      expenseAmountController.text = expenseAmount!.toString();
       titleController.text = title!;
       noteController.text = note!;
+      selectedContainerIndex = selectedWidgetContainerIndex!;
     }
   }
 
@@ -64,6 +79,8 @@ class _AddBudgetState extends State<AddBudget> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Consumer3<AddListProvider, AddBudgetProvider, BudgetProvider>(
       builder: (BuildContext context, snapshot, snapshot2, snapshot3, _) {
         return Scaffold(
@@ -75,39 +92,26 @@ class _AddBudgetState extends State<AddBudget> {
               "Main Account",
               style: TextStyle(color: black, fontWeight: FontWeight.bold),
             ),
-            leading: Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: Icon(
-                    Icons.arrow_back_ios_new_outlined,
-                    color: black,
-                  ),
-                ),
-                const SizedBox(
-                  width: 8.0,
-                ),
-                Icon(
-                  Icons.wallet,
-                  color: black,
-                ),
-              ],
+            leading: GestureDetector(
+              onTap: () {
+                Navigator.pop(context);
+              },
+              child: Icon(
+                Icons.arrow_back_ios_new_outlined,
+                color: black,
+              ),
             ),
             actions: [
               isEdit
                   ? IconButton(
                       onPressed: () {
                         //Deleting the category from the list
-                        snapshot.incomeTextFormValues.value.removeWhere(
-                            (element) => widget.title == element.title);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomePage(),
-                          ),
-                        );
+                        snapshot.removeListFromHomePage(
+                            incomeWidgetAmount: widget.incomeAmount!,
+                            expenseWidgetAmount: widget.expenseAmount!,
+                            widgetTitle: widget.title!,
+                            context: context,
+                            selectedContainerIndex: selectedContainerIndex);
                       },
                       icon: Icon(
                         Icons.delete_outline,
@@ -125,163 +129,215 @@ class _AddBudgetState extends State<AddBudget> {
                 child: Column(
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         GestureDetector(
                           onTap: () {
                             changeColor(1);
                           },
-                          child: Container(
-                            height: 60,
-                            width: 130,
-                            decoration: BoxDecoration(
-                              color: selectedContainerIndex == 1
-                                  ? container1Color
-                                  : container2Color,
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(20),
-                              ),
-                              border: Border.all(color: teal),
+                          child: Material(
+                            color: white,
+                            elevation: 8,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(20),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Text(
-                                  "Income",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                    color: selectedContainerIndex == 1
-                                        ? white
-                                        : black,
+                            shadowColor: selectedContainerIndex == 1
+                                ? Colors.transparent
+                                :black ,
+                            child: Container(
+                              height: height * 0.05,
+                              width: width * 0.3,
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.all(
+                                  Radius.circular(20),
+                                ),
+                                border: Border.all(
+                                  color: selectedContainerIndex == 1
+                                      ? container1Color
+                                      : container2Color,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Text(
+                                    "Income",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: selectedContainerIndex == 1
+                                          ? black
+                                          : primary,
+                                    ),
                                   ),
-                                ),
-                                const Icon(
-                                  Icons.arrow_upward_outlined,
-                                  color: Colors.green,
-                                ),
-                              ],
+                                  Icon(
+                                    Icons.arrow_upward_outlined,
+                                    color: selectedContainerIndex == 1
+                                        ? Colors.green
+                                        : primary,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
+                        ),
+                        const SizedBox(
+                          width: 25,
                         ),
                         GestureDetector(
                           onTap: () {
                             changeColor(2);
+                            selectedContainerIndex = 2;
                           },
-                          child: Container(
-                            height: 60,
-                            width: 130,
-                            decoration: BoxDecoration(
-                                color: selectedContainerIndex == 2
-                                    ? container1Color
-                                    : container2Color,
+                          child: Material(
+                            color: white,
+                            elevation: 8,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(20),
+                            ),
+                            shadowColor: selectedContainerIndex == 2
+                                ? Colors.transparent
+                                :black ,
+                            child: Container(
+                              height: height * 0.05,
+                              width: width * 0.3,
+                              decoration: BoxDecoration(
                                 borderRadius:
                                     const BorderRadius.all(Radius.circular(20)),
-                                border: Border.all(color: teal)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Text(
-                                  "Expense",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                    color: selectedContainerIndex == 2
-                                        ? white
-                                        : black,
+                                border: Border.all(
+                                  color: selectedContainerIndex == 2
+                                      ? container1Color
+                                      : container2Color,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Text(
+                                    "Expense",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: selectedContainerIndex == 2
+                                          ? black
+                                          : primary,
+                                    ),
                                   ),
-                                ),
-                                const Icon(
-                                  Icons.arrow_downward_outlined,
-                                  color: Colors.red,
-                                ),
-                              ],
+                                  Icon(
+                                    Icons.arrow_downward_outlined,
+                                    color: selectedContainerIndex == 2
+                                        ? Colors.red
+                                        : primary,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         )
                       ],
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 25,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Container(
-                          height: 35,
-                          width: 175,
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(20)),
-                              border: Border.all(
-                                color: teal,
-                              )),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              const Icon(Icons.calendar_today_outlined),
-                              Text(
-                                snapshot.currentDate,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                             Icon(
+                              Icons.calendar_today_outlined,
+                              size: 20.0,
+                              color: primary,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              snapshot.currentDate,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                         const SizedBox(
-                          width: 10,
+                          width: 15,
                         ),
-                        Container(
-                          height: 35,
-                          width: 125,
-                          decoration: BoxDecoration(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(20)),
-                              border: Border.all(
-                                color: teal,
-                              )),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              const Icon(Icons.access_time_outlined),
-                              Text(
-                                snapshot.currentTime,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                             Icon(
+                              Icons.access_time_outlined,
+                              size: 20.0,
+                              color: primary,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              snapshot.currentTime,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         )
                       ],
                     ),
                     const SizedBox(
                       height: 20,
                     ),
-                    TextFormField(
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          return 'Please enter amount';
-                        }
-                        return null;
-                      },
-                      keyboardType: TextInputType.number,
-                      cursorColor: teal,
-                      controller: amountController,
-                      decoration: InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: teal),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: teal),
-                        ),
-                        hintText: "Enter Amount",
-                        hintStyle: TextStyle(
-                          color: primary,
-                        ),
-                      ),
-                    ),
+                    selectedContainerIndex == 1
+                        ? TextFormField(
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter amount';
+                              }
+                              return null;
+                            },
+                            keyboardType: TextInputType.number,
+                            cursorColor: teal,
+                            controller: incomeAmountController,
+                            decoration: InputDecoration(
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: primary),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: teal),
+                              ),
+                              hintText: "Enter Amount",
+                              hintStyle: TextStyle(
+                                color: primary,
+                              ),
+                            ),
+                          )
+                        : TextFormField(
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter amount';
+                              }
+                              return null;
+                            },
+                            keyboardType: TextInputType.number,
+                            cursorColor: teal,
+                            controller: expenseAmountController,
+                            decoration: InputDecoration(
+                              enabledBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: primary),
+                              ),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(color: teal),
+                              ),
+                              hintText: "Enter Amount",
+                              hintStyle: TextStyle(
+                                color: primary,
+                              ),
+                            ),
+                          ),
                     const SizedBox(
                       height: 15,
                     ),
@@ -297,7 +353,7 @@ class _AddBudgetState extends State<AddBudget> {
                       controller: titleController,
                       decoration: InputDecoration(
                         enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: teal),
+                          borderSide: BorderSide(color: primary),
                         ),
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: teal),
@@ -323,7 +379,7 @@ class _AddBudgetState extends State<AddBudget> {
                       controller: noteController,
                       decoration: InputDecoration(
                         enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: teal),
+                          borderSide: BorderSide(color: primary),
                         ),
                         focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: teal),
@@ -357,15 +413,15 @@ class _AddBudgetState extends State<AddBudget> {
                                     alignment: Alignment.centerLeft,
                                     child: Row(
                                       children: [
-                                        const Text(
+                                           Text(
                                           "Categories : ",
                                           style: TextStyle(
-                                            color: Colors.grey,
+                                            color:primary,
                                           ),
                                         ),
                                         snapshot2.incomeCategoryName.isEmpty
                                             ? Text(
-                                                "Others",
+                                                "",
                                                 style: TextStyle(
                                                     color: black,
                                                     fontWeight:
@@ -411,17 +467,17 @@ class _AddBudgetState extends State<AddBudget> {
                                                 right: 5.0,
                                               ),
                                               decoration: BoxDecoration(
-                                                color: snapshot2
-                                                            .incomeContainerList[
-                                                                index]
-                                                            .containerIndex ==
-                                                        snapshot2
-                                                            .incomeSelectedIndex
-                                                    ? snapshot2
-                                                        .incomeContainerList[
-                                                            index]
-                                                        .bgcolor
-                                                    : white,
+                                                // color: snapshot2
+                                                //             .incomeContainerList[
+                                                //                 index]
+                                                //             .containerIndex ==
+                                                //         snapshot2
+                                                //             .incomeSelectedIndex
+                                                //     ? snapshot2
+                                                //         .incomeContainerList[
+                                                //             index]
+                                                //         .bgcolor
+                                                //     : white,
                                                 borderRadius:
                                                     const BorderRadius.all(
                                                   Radius.circular(20),
@@ -437,17 +493,18 @@ class _AddBudgetState extends State<AddBudget> {
                                                           .incomeContainerList[
                                                               index]
                                                           .bgcolor
-                                                      : Colors.grey.shade500,
+                                                      : primary,
                                                 ),
                                               ),
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   CircleAvatar(
-                                                    backgroundColor: snapshot2
-                                                        .incomeContainerList[
-                                                            index]
-                                                        .bgcolor,
+                                                    backgroundColor: white,
+                                                    // backgroundColor: snapshot2
+                                                    //     .incomeContainerList[
+                                                    //         index]
+                                                    //     .bgcolor,
                                                     radius: 15,
                                                     child: Icon(
                                                       snapshot2
@@ -455,7 +512,17 @@ class _AddBudgetState extends State<AddBudget> {
                                                               index]
                                                           .icon,
                                                       size: 20,
-                                                      color: black,
+                                                      color:  snapshot2
+                                                          .incomeContainerList[
+                                                      index]
+                                                          .containerIndex ==
+                                                          snapshot2
+                                                              .incomeSelectedIndex
+                                                          ? snapshot2
+                                                          .incomeContainerList[
+                                                      index]
+                                                          .bgcolor
+                                                          : primary,
                                                     ),
                                                   ),
                                                   const SizedBox(
@@ -561,43 +628,40 @@ class _AddBudgetState extends State<AddBudget> {
                                                 right: 5.0,
                                               ),
                                               decoration: BoxDecoration(
-                                                color: snapshot2
-                                                            .expenseContainerList[
-                                                                index]
-                                                            .containerIndex ==
-                                                        snapshot2
-                                                            .expenseSelectedIndex
-                                                    ? snapshot2
-                                                        .expenseContainerList[
-                                                            index]
-                                                        .bgcolor
-                                                    : white,
+                                                // color: snapshot2
+                                                //             .expenseContainerList[
+                                                //                 index]
+                                                //             .containerIndex ==
+                                                //         snapshot2
+                                                //             .expenseSelectedIndex
+                                                //     ? snapshot2
+                                                //         .expenseContainerList[
+                                                //             index]
+                                                //         .bgcolor
+                                                //     : white,
                                                 borderRadius:
                                                     const BorderRadius.all(
                                                   Radius.circular(20),
                                                 ),
                                                 border: Border.all(
                                                   color: snapshot2
-                                                              .expenseContainerList[
-                                                                  index]
-                                                              .containerIndex ==
-                                                          snapshot2
-                                                              .expenseSelectedIndex
+                                                      .expenseContainerList[
+                                                  index]
+                                                      .containerIndex ==
+                                                      snapshot2
+                                                          .expenseSelectedIndex
                                                       ? snapshot2
-                                                          .expenseContainerList[
-                                                              index]
-                                                          .bgcolor
-                                                      : Colors.grey.shade500,
+                                                      .expenseContainerList[
+                                                  index]
+                                                      .bgcolor
+                                                      : primary,
                                                 ),
                                               ),
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
                                                   CircleAvatar(
-                                                    backgroundColor: snapshot2
-                                                        .expenseContainerList[
-                                                            index]
-                                                        .bgcolor,
+                                                    backgroundColor: white,
                                                     radius: 15,
                                                     child: Icon(
                                                       snapshot2
@@ -605,7 +669,17 @@ class _AddBudgetState extends State<AddBudget> {
                                                               index]
                                                           .icon,
                                                       size: 20,
-                                                      color: black,
+                                                      color:  snapshot2
+                                                          .expenseContainerList[
+                                                      index]
+                                                          .containerIndex ==
+                                                          snapshot2
+                                                              .expenseSelectedIndex
+                                                          ? snapshot2
+                                                          .expenseContainerList[
+                                                      index]
+                                                          .bgcolor
+                                                          : primary,
                                                     ),
                                                   ),
                                                   const SizedBox(
@@ -692,8 +766,9 @@ class _AddBudgetState extends State<AddBudget> {
                     isEdit
                         ? ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: teal,
-                                minimumSize: const Size(350, 50)),
+                              backgroundColor: teal,
+                              minimumSize: Size(width * 1.5, height * 0.07),
+                            ),
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
                                 snapshot.updateListElements(
@@ -701,32 +776,68 @@ class _AddBudgetState extends State<AddBudget> {
                                   widgetTitle: widget.title!,
                                   noteController: noteController.text.trim(),
                                   widgetNote: widget.note!,
-                                  amountController:
-                                      int.parse(amountController.text.trim()),
-                                  widgetAmount: widget.amount!,
+                                  incomeAmountController: int.parse(
+                                      incomeAmountController.text.trim()),
+                                  expenseAmountController: int.parse(
+                                      expenseAmountController.text.trim()),
+                                  widgetIncomeAmount: widget.incomeAmount!,
+                                  widgetExpenseAmount: widget.expenseAmount!,
+                                  context: context,
+                                  widgetSelectedContainerIndex:
+                                      widget.selectedContainer!,
+                                  currentContainerIndex: selectedContainerIndex,
+                                  icon: iconCategory!,
+                                  widgetIcon: widget.icon!,
+                                  widgetContainerColor: widget.bgColor!,
+                                  currentContainerColor: bgColorOfContainer,
                                 );
                               }
                             },
-                            child: const Text(
+                            child: Text(
                               "Update",
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
+                              style: TextStyle(fontSize: 20, color: black),
                             ),
                           )
                         : ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: teal,
-                                minimumSize: const Size(350, 50)),
+                              elevation: 8,
+                              backgroundColor: teal,
+                              minimumSize: Size(width * 1.5, height * 0.07),
+                            ),
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
+                                int incomeAmount = 0;
+                                int expenseAmount = 0;
+                                String incomeAmountText =
+                                    incomeAmountController.text.trim();
+                                if (incomeAmountText.isNotEmpty) {
+                                  try {
+                                    incomeAmount = int.parse(incomeAmountText);
+                                  } catch (e) {
+                                    log("this is the Error message",
+                                        name: "income");
+                                  }
+                                }
+
+                                String expenseAmountText =
+                                    expenseAmountController.text.trim();
+                                if (expenseAmountText.isNotEmpty) {
+                                  try {
+                                    expenseAmount =
+                                        int.parse(expenseAmountText);
+                                  } catch (e) {
+                                    log("this is the Error message",
+                                        name: "expense");
+                                  }
+                                }
                                 final access = ValueOfTextForm(
-                                  int.parse(amountController.text.trim()),
+                                  incomeAmount,
+                                  expenseAmount,
                                   noteController.text.trim(),
                                   titleController.text.trim(),
                                   selectedContainerIndex,
                                   //saving the icon to access in the homepage.
-                                  iconCategory,
+                                  iconCategory!,
                                   //saving the bgColor to access in the homepage.
                                   bgColorOfContainer,
                                 );
@@ -735,19 +846,30 @@ class _AddBudgetState extends State<AddBudget> {
                                     : snapshot.addingExpense(access, context);
 
                                 if (selectedContainerIndex == 2) {
+                                  int spendAmount = 0;
+                                  String expenseAmountText =
+                                      expenseAmountController.text.trim();
+                                  if (expenseAmountText.isNotEmpty) {
+                                    try {
+                                      spendAmount =
+                                          int.parse(expenseAmountText);
+                                    } catch (e) {
+                                      log("the expense controller is null");
+                                    }
+                                  }
+
                                   snapshot3.totalRemSpend(
                                     snapshot2.expenseCategoryName,
-                                    spendAmount: int.parse(
-                                      amountController.text.trim(),
-                                    ),
+                                    spendAmount: spendAmount,
                                   );
                                 }
                               }
                             },
-                            child: const Text(
+                            child: Text(
                               "Save",
                               style: TextStyle(
                                 fontSize: 20,
+                                color: black,
                               ),
                             ),
                           ),

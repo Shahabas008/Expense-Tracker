@@ -25,56 +25,6 @@ class BudgetPage extends StatelessWidget {
           ),
           body: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    children: [
-                      Text(
-                        "Total Budget",
-                        style: TextStyle(
-                            color: black, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        "\u{20B9} ${snapshot.totalBudget}",
-                        style: TextStyle(
-                          color: black,
-                        ),
-                      ), // display the budget
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Text(
-                        "Total Spend",
-                        style: TextStyle(
-                            color: black, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        snapshot.budgetedList.isEmpty
-                            ? "0"
-                            : "\u{20B9} ${snapshot.totalSpend}",
-                        style: const TextStyle(color: Colors.red),
-                      ), // display the Spend
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Text(
-                        "Total Remaining",
-                        style: TextStyle(
-                            color: black, fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        snapshot.budgetedList.isEmpty
-                            ? "0"
-                            : "\u{20B9} ${snapshot.totalRemaining}",
-                        style: TextStyle(color: teal),
-                      ), // display the Left
-                    ],
-                  ),
-                ],
-              ),
               const SizedBox(
                 height: 10,
               ),
@@ -92,6 +42,63 @@ class BudgetPage extends StatelessWidget {
                               color: Colors.black, fontWeight: FontWeight.w500),
                         )
                       ],
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              "Total Budget",
+                              style: TextStyle(
+                                  color: black, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "\u{20B9} ${snapshot.totalBudget}",
+                              style: TextStyle(
+                                color: black,
+                              ),
+                            ), // display the budget
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              "Total Spend",
+                              style: TextStyle(
+                                  color: black, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              snapshot.budgetedList.isEmpty
+                                  ? "0"
+                                  : "\u{20B9} ${snapshot.totalSpend}",
+                              style: const TextStyle(color: Colors.red),
+                            ), // display the Spend
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text(
+                              "Total Remaining",
+                              style: TextStyle(
+                                  color: black, fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              snapshot.budgetedList.isEmpty
+                                  ? "0"
+                                  : "\u{20B9} ${snapshot.totalRemaining}",
+                              style: TextStyle(color: teal),
+                            ), // display the Left
+                          ],
+                        ),
+                      ],
+                    ),
+              const SizedBox(
+                height: 15,
+              ),
+              snapshot.budgetedList.isEmpty
+                  ? const Text(
+                      "",
                     )
                   : Text(
                       "Budgeted Categories",

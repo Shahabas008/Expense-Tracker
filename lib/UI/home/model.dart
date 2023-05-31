@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 
 class ValueOfTextForm {
-  int amount;
+  int incomeAmount;
+  int expenseAmount;
   String title;
   String note;
   int selectedIndexHome;
   IconData categoryIcon;
   Color bgColorOfContainer;
 
-  ValueOfTextForm(this.amount, this.note, this.title, this.selectedIndexHome,
+  ValueOfTextForm(this.incomeAmount , this.expenseAmount ,this.note, this.title, this.selectedIndexHome,
       this.categoryIcon,this.bgColorOfContainer);
 }

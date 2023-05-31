@@ -8,7 +8,7 @@ class AddBudgetProvider extends ChangeNotifier {
       false,
       0,
       'Others',
-      Colors.grey,
+      Colors.black,
       Icons.note_outlined,
     ),
     AddBudgetModel(
@@ -16,7 +16,7 @@ class AddBudgetProvider extends ChangeNotifier {
       1,
       'Bills and Utilities',
       Colors.yellow.shade300,
-      Icons.note_outlined,
+      Icons.payment_outlined,
     ),
     AddBudgetModel(
       false,
@@ -29,7 +29,7 @@ class AddBudgetProvider extends ChangeNotifier {
       false,
       3,
       'Entertainment',
-      Colors.brown.shade700,
+      Colors.orange,
       Icons.tv,
     ),
     AddBudgetModel(
@@ -78,7 +78,7 @@ class AddBudgetProvider extends ChangeNotifier {
       false,
       10,
       'Insurance',
-      Colors.indigo.shade100,
+      Colors.indigo,
       Icons.newspaper_outlined,
     ),
     AddBudgetModel(

@@ -1,5 +1,3 @@
-import 'dart:developer';
-import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:money_management_app/UI/addBugdet/addbudget.dart';
@@ -224,7 +222,7 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               "Tap on '+' to add Income/Expense",
                               style: TextStyle(
-                                color: black,
+                                color: primary,
                               ),
                             ),
                           ],
@@ -274,29 +272,38 @@ class _HomePageState extends State<HomePage> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => AddBudget(
-                                            amount: snapshot
+                                            incomeAmount: snapshot
                                                 .incomeTextFormValues
                                                 .value[index]
-                                                .amount,
+                                                .incomeAmount,
+                                            expenseAmount: snapshot
+                                                .incomeTextFormValues
+                                                .value[index]
+                                                .expenseAmount,
                                             title: snapshot.incomeTextFormValues
                                                 .value[index].title,
                                             note: snapshot.incomeTextFormValues
                                                 .value[index].note,
+                                            selectedContainer: snapshot
+                                                .incomeTextFormValues
+                                                .value[index]
+                                                .selectedIndexHome,
+                                            icon: snapshot.incomeTextFormValues
+                                                .value[index].categoryIcon,
+                                            bgColor: snapshot
+                                                .incomeTextFormValues
+                                                .value[index]
+                                                .bgColorOfContainer,
                                           ),
                                         ),
                                       );
                                     },
                                     child: ListTile(
-                                      leading: CircleAvatar(
-                                        backgroundColor: snapshot
-                                            .incomeTextFormValues
-                                            .value[index]
-                                            .bgColorOfContainer,
-                                        child: Icon(
-                                          snapshot.incomeTextFormValues
-                                              .value[index].categoryIcon,
-                                          color: black,
-                                        ),
+                                      leading: Icon(
+                                        snapshot.incomeTextFormValues
+                                            .value[index].categoryIcon,
+                                        color: snapshot.incomeTextFormValues
+                                            .value[index].bgColorOfContainer,
                                       ),
                                       //display the category icon here
                                       subtitle: Text(snapshot
@@ -316,13 +323,13 @@ class _HomePageState extends State<HomePage> {
                                                   .selectedIndexHome ==
                                               1
                                           ? Text(
-                                              "+ \u{20B9} ${snapshot.incomeTextFormValues.value[index].amount}",
+                                              "+ \u{20B9} ${snapshot.incomeTextFormValues.value[index].incomeAmount}",
                                               style: const TextStyle(
                                                 color: Colors.green,
                                               ),
                                             )
                                           : Text(
-                                              " - \u{20B9} ${snapshot.incomeTextFormValues.value[index].amount}",
+                                              " - \u{20B9} ${snapshot.incomeTextFormValues.value[index].expenseAmount}",
                                               style: const TextStyle(
                                                 color: Colors.red,
                                               ),
@@ -339,12 +346,13 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           floatingActionButton: FloatingActionButton(
-            backgroundColor: teal,
-            foregroundColor: white,
+            backgroundColor: white,
+            foregroundColor: teal,
+            elevation: 8,
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddBudget()),
+                MaterialPageRoute(builder: (context) => const AddBudget()),
               );
             },
             child: const Icon(Icons.add),
