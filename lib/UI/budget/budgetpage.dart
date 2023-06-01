@@ -2,16 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:money_management_app/widget/listtilebudgetwidget.dart';
 import 'package:provider/provider.dart';
 import '../../utils/colors.dart';
+import '../home/provider.dart';
 import 'budget_model.dart';
 import 'budget_provider.dart';
 
-class BudgetPage extends StatelessWidget {
+class BudgetPage extends StatefulWidget {
   const BudgetPage({Key? key}) : super(key: key);
 
   @override
+  State<BudgetPage> createState() => _BudgetPageState();
+}
+
+class _BudgetPageState extends State<BudgetPage> {
+  @override
   Widget build(BuildContext context) {
-    return Consumer<BudgetProvider>(
-      builder: (context, snapshot, _) {
+    return Consumer2<BudgetProvider , AddListProvider>(
+      builder: (context, snapshot , snapshot2, _) {
         return Scaffold(
           backgroundColor: white,
           appBar: AppBar(
@@ -25,9 +31,6 @@ class BudgetPage extends StatelessWidget {
           ),
           body: Column(
             children: [
-              const SizedBox(
-                height: 10,
-              ),
               snapshot.budgetedList.isEmpty
                   ? Column(
                       children: [
@@ -68,10 +71,9 @@ class BudgetPage extends StatelessWidget {
                               style: TextStyle(
                                   color: black, fontWeight: FontWeight.bold),
                             ),
+
                             Text(
-                              snapshot.budgetedList.isEmpty
-                                  ? "0"
-                                  : "\u{20B9} ${snapshot.totalSpend}",
+                              "\u{20B9} ${snapshot2.totalSpendValue}",
                               style: const TextStyle(color: Colors.red),
                             ), // display the Spend
                           ],
@@ -84,9 +86,7 @@ class BudgetPage extends StatelessWidget {
                                   color: black, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              snapshot.budgetedList.isEmpty
-                                  ? "0"
-                                  : "\u{20B9} ${snapshot.totalRemaining}",
+                           "\u{20B9} ${snapshot.totalRemaining}",
                               style: TextStyle(color: teal),
                             ), // display the Left
                           ],

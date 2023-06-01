@@ -1,15 +1,16 @@
 import 'dart:developer';
+import 'dart:js';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../home/provider.dart';
 import 'budget_model.dart';
 
 class BudgetProvider extends ChangeNotifier {
   //VARIABLES
   int totalBudget = 0;
-  int totalSpend = 0;
   int totalRemaining = 0;
   String category = '';
-
   List<BudgetModel> budgetedList = [];
   List<BudgetModel> nonBudgetedList = [
     BudgetModel(0, 0, "Bills and Utilities", false, Icons.payment_outlined),
@@ -30,7 +31,7 @@ class BudgetProvider extends ChangeNotifier {
 
   //FUNCTIONS
 
-  void settingLimit(BudgetModel value) {
+  void settingLimit(BudgetModel value, BuildContext context) {
     if (value.isBudgeted) {
       budgetedList.add(value);
       nonBudgetedList
@@ -40,14 +41,12 @@ class BudgetProvider extends ChangeNotifier {
     }
     setLimit.add(value);
     totalBudget += value.setLimitvalue;
+    totalRemaining += value.setLimitvalue;
+    final provider = Provider.of<AddListProvider>(context, listen: false);
+    provider.totalSpendAmount(context: context);
+    totalRemaining = totalBudget - provider.totalSpendValue;
     value.isBudgeted = value.setLimitvalue == 0 ? false : true;
     updateTotalBudget();
-    notifyListeners();
-  }
-
-  //subtracting the amount of the category from the total budget when deleting the list from budgetList.
-  void totalExpense(int totalExpenseValue) {
-    totalBudget = totalBudget - totalExpenseValue;
     notifyListeners();
   }
 
@@ -55,11 +54,13 @@ class BudgetProvider extends ChangeNotifier {
   void removeItems(
       {required BudgetModel budgetModel,
       required BuildContext context,
-      required category}) {
+      required category,
+      required amount}) {
     budgetedList.removeWhere((element) => element.categories == category);
     nonBudgetedList.add(budgetModel);
     budgetModel.isBudgeted = false;
-    totalExpense(budgetModel.setLimitvalue);
+    totalBudget = totalBudget - budgetModel.setLimitvalue;
+    totalRemaining = totalRemaining - int.parse(amount);
     Navigator.pop(context);
     notifyListeners();
   }
@@ -72,8 +73,12 @@ class BudgetProvider extends ChangeNotifier {
     int indexOfItem = budgetedList.indexWhere(
       (element) => element.categories == category,
     );
+    totalRemaining = totalRemaining - budgetedList[indexOfItem].setLimitvalue;
+    totalBudget = totalBudget - budgetedList[indexOfItem].setLimitvalue;
     budgetedList[indexOfItem].setLimitvalue =
         int.parse(updateValueController.text.trim());
+    totalRemaining = totalRemaining + budgetedList[indexOfItem].setLimitvalue;
+    totalBudget = totalBudget + budgetedList[indexOfItem].setLimitvalue;
     notifyListeners();
     Navigator.pop(context);
   }
@@ -84,18 +89,22 @@ class BudgetProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  //function for the total remaining and total spend
-  void totalRemSpend(String categoryName, {int? spendAmount, int? remAmount}) {
-    final int actualSpendAmount = spendAmount ?? 0;
-    final int actualRemAmount = remAmount ?? 0;
-    totalSpend = totalSpend + actualSpendAmount;
-    totalRemaining = totalBudget - totalSpend;
-    for (int i = 0; i < budgetedList.length; i++) {
-      if (categoryName == budgetedList[i].categories) {
-        budgetedList[i].spendAmount =
-            budgetedList[i].spendAmount - actualSpendAmount;
-        budgetedList[i].setLimitvalue =
-            budgetedList[i].spendAmount - actualSpendAmount;
+  //Function for the category spends.
+  void categorySpends(BuildContext context) {
+    final homeProvider = Provider.of<AddListProvider>(context, listen: false);
+    for (int i = 0; i < homeProvider.incomeTextFormValues.value.length; i++) {
+      for (int j = 0; j < nonBudgetedList.length; j++) {
+        if (homeProvider.incomeTextFormValues.value[i].categoryName ==
+            nonBudgetedList[j].categories) {
+          nonBudgetedList[i].spendAmount = 0;
+          nonBudgetedList[i].spendAmount +=
+              homeProvider.incomeTextFormValues.value[i].expenseAmount;
+          log(nonBudgetedList[i].spendAmount.toString(),
+              name: "this is the spend amount from the nonbudgetedlist");
+          log(nonBudgetedList[i].categories.toString(),
+              name: "this is the category name from the nonbudgetedlist");
+          break; // Break the inner loop once a match is found
+        }
       }
     }
   }

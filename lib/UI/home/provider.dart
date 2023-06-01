@@ -1,8 +1,9 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:money_management_app/UI/home/homepage.dart';
+import 'package:provider/provider.dart';
+import '../budget/budget_provider.dart';
 import 'model.dart';
 
 class AddListProvider extends ChangeNotifier {
@@ -137,4 +138,29 @@ class AddListProvider extends ChangeNotifier {
       ),
     );
   }
+
+  //Total spend of the displayed list on the home page to show on the budget page (Total Spend)
+  int totalSpendValue = 0;
+  //compare the category name of the homepage display list and the budgeted list
+  //if the both category name are same then the spend amount of the home page list should add to the totalspendValue.
+  void totalSpendAmount({BuildContext? context}) {
+    final provider = Provider.of<BudgetProvider>(context!, listen: false);
+    if (incomeTextFormValues.value.isNotEmpty &&
+        provider.budgetedList.isNotEmpty) {
+      totalSpendValue = 0; // Reset the totalSpendValue before calculating
+      for (int i = 0; i < incomeTextFormValues.value.length; i++) {
+        for (int j = 0; j < provider.budgetedList.length; j++) {
+          if (incomeTextFormValues.value[i].categoryName ==
+              provider.budgetedList[j].categories) {
+            totalSpendValue += incomeTextFormValues.value[i].expenseAmount;
+            break; // Break the inner loop once a match is found
+          }
+        }
+      }
+    }
+    notifyListeners();
+  }
+
+  //Remaining amount of each category.
+  void remainingAmount() {}
 }

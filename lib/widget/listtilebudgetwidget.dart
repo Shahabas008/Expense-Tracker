@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:money_management_app/UI/budget/budget_model.dart';
 import 'package:money_management_app/UI/budget/budget_provider.dart';
 import 'package:provider/provider.dart';
+import '../UI/home/provider.dart';
 import '../utils/colors.dart';
 
 class ListTileWidget extends StatefulWidget {
@@ -22,13 +25,25 @@ class ListTileWidget extends StatefulWidget {
 class _ListTileWidgetState extends State<ListTileWidget> {
   @override
   Widget build(BuildContext context) {
+    final homeProvider = Provider.of<AddListProvider>(context, listen: false);
+    final budgetProvider = Provider.of<BudgetProvider>(context, listen: false);
     return Consumer<BudgetProvider>(
       builder: (context, snapshot, _) {
         // Find the BudgetModel for the specific category
         BudgetModel? budgetModel = snapshot.setLimit.firstWhere(
           (model) => model.categories == widget.category,
-          orElse: () => BudgetModel(0, 0,'', false, Icons.add),
+          orElse: () => BudgetModel(0, 0, '', false, Icons.add),
         );
+
+        // budgetProvider.nonBudgetedList
+        //     .asMap()
+        //     .forEach((index, nonBudgetedItem) {
+        //   int matchingIndex = homeProvider.incomeTextFormValues.value.indexWhere(
+        //     (incomeItem) =>
+        //         incomeItem.categoryName == nonBudgetedItem.categories,
+        //   );
+        //
+        // });
         TextEditingController setLimitController = TextEditingController();
         TextEditingController updateValueController =
             TextEditingController(text: budgetModel.setLimitvalue.toString());
@@ -43,8 +58,9 @@ class _ListTileWidgetState extends State<ListTileWidget> {
           ),
           subtitle: Text(
             widget.isBudgeted
-                ? "Remaining: \u{20B9} ${budgetModel.spendAmount.toString()}"
-                : "Spends: \u{20B9} 0",
+                ? "Remaining: \u{20B9} ${budgetModel.setLimitvalue.toString()}"
+                : "Spends: \u{20B9}" "0" ,
+                // " ${snapshot.nonBudgetedList[matchingIndex].spendAmount} ",
             style: TextStyle(color: black),
           ),
           trailing: widget.isBudgeted
@@ -91,7 +107,8 @@ class _ListTileWidgetState extends State<ListTileWidget> {
                                 snapshot.removeItems(
                                     budgetModel: budgetModel,
                                     context: context,
-                                    category: widget.category);
+                                    category: widget.category,
+                                    amount: updateValueController.text.trim());
                               },
                               child: const Text(
                                 "Delete",
@@ -210,11 +227,11 @@ class _ListTileWidgetState extends State<ListTileWidget> {
                                   isBudgeted = true,
                                   widget.icon,
                                 );
-                                snapshot.settingLimit(access);
-                                snapshot.totalRemSpend(widget.category,
-                                    remAmount: int.parse(
-                                      setLimitController.text.trim(),
-                                    ));
+                                snapshot.settingLimit(access, context);
+                                final provider = Provider.of<AddListProvider>(
+                                    context,
+                                    listen: false);
+                                provider.totalSpendAmount(context: context);
                                 Navigator.pop(context);
                               },
                               child: Text(
