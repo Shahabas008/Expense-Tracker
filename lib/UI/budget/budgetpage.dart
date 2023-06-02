@@ -119,6 +119,8 @@ class _BudgetPageState extends State<BudgetPage> {
                         category: category.categories,
                         icon: category.icon,
                         isBudgeted: true,
+                        spendAmount: snapshot.budgetedList[index].spendAmount,
+                        remainingAmount: category.remainingAmount,
                       );
                     },
                   ),
@@ -143,10 +145,11 @@ class _BudgetPageState extends State<BudgetPage> {
                       category: category.categories,
                       icon: category.icon,
                       isBudgeted: category.isBudgeted,
+                      spendAmount : snapshot.nonBudgetedList[index].spendAmount,
                     );
                   },
                 ),
-              )
+              ),
             ],
           ),
         );

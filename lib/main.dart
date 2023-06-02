@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => BudgetProvider()),
         ChangeNotifierProvider(create: (_) => AddBudgetProvider()),
       ],
-      child: const  MaterialApp(
+      child:MaterialApp(
         debugShowCheckedModeBanner: false,
         home: BottomNavigationBarPage(),
       ),

@@ -47,7 +47,7 @@ class _AddBudgetState extends State<AddBudget> {
   IconData? iconCategory;
   Color bgColorOfContainer = Colors.transparent;
   bool isEdit = false;
-  late String categoryName;
+  String categoryName = "";
 
   @override
   void initState() {
@@ -468,17 +468,6 @@ class _AddBudgetState extends State<AddBudget> {
                                                 right: 5.0,
                                               ),
                                               decoration: BoxDecoration(
-                                                // color: snapshot2
-                                                //             .incomeContainerList[
-                                                //                 index]
-                                                //             .containerIndex ==
-                                                //         snapshot2
-                                                //             .incomeSelectedIndex
-                                                //     ? snapshot2
-                                                //         .incomeContainerList[
-                                                //             index]
-                                                //         .bgcolor
-                                                //     : white,
                                                 borderRadius:
                                                     const BorderRadius.all(
                                                   Radius.circular(20),
@@ -502,10 +491,6 @@ class _AddBudgetState extends State<AddBudget> {
                                                 children: [
                                                   CircleAvatar(
                                                     backgroundColor: white,
-                                                    // backgroundColor: snapshot2
-                                                    //     .incomeContainerList[
-                                                    //         index]
-                                                    //     .bgcolor,
                                                     radius: 15,
                                                     child: Icon(
                                                       snapshot2
@@ -610,7 +595,9 @@ class _AddBudgetState extends State<AddBudget> {
                                         (index) {
                                           return GestureDetector(
                                             onTap: () {
-                                              categoryName = snapshot2.expenseContainerList[index].text;
+                                              categoryName = snapshot2
+                                                  .expenseContainerList[index]
+                                                  .text;
                                               snapshot2
                                                   .expenseSelectedContainerColorChange(
                                                       snapshot2
@@ -782,6 +769,10 @@ class _AddBudgetState extends State<AddBudget> {
                                   widgetContainerColor: widget.bgColor!,
                                   currentContainerColor: bgColorOfContainer,
                                 );
+                                snapshot.totalSpendAmount(context: context);
+                                snapshot3.categorySpends(context);
+                                snapshot3.categoryRemaining(context);
+                                snapshot.totalRemaining(context);
                               }
                             },
                             child: Text(
@@ -822,7 +813,7 @@ class _AddBudgetState extends State<AddBudget> {
                                   }
                                 }
                                 final access = ValueOfTextForm(
-                                  categoryName,
+                                  categoryName!,
                                   incomeAmount,
                                   expenseAmount,
                                   noteController.text.trim(),
@@ -839,6 +830,9 @@ class _AddBudgetState extends State<AddBudget> {
 
                                 if (selectedContainerIndex == 2) {
                                   snapshot.totalSpendAmount(context: context);
+                                  snapshot3.totalRemaining =
+                                      snapshot3.totalBudget -
+                                          snapshot.totalSpendValue;
                                   int spendAmount = 0;
                                   String expenseAmountText =
                                       expenseAmountController.text.trim();
@@ -851,10 +845,10 @@ class _AddBudgetState extends State<AddBudget> {
                                     }
                                   }
                                 }
+
+                                snapshot3.categorySpends(context);
+                                snapshot3.categoryRemaining(context);
                               }
-                              snapshot.totalSpendAmount(context: context);
-                              snapshot3.totalRemaining = snapshot3.totalBudget - snapshot.totalSpendValue;
-                              snapshot3.categorySpends(context);
                             },
                             child: Text(
                               "Save",

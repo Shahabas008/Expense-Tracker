@@ -12,11 +12,15 @@ class ListTileWidget extends StatefulWidget {
       {Key? key,
       required this.category,
       required this.icon,
-      required this.isBudgeted})
+      required this.isBudgeted,
+      required this.spendAmount,
+       this.remainingAmount,})
       : super(key: key);
   final String category;
   IconData icon;
   bool isBudgeted;
+  int spendAmount;
+  int? remainingAmount;
 
   @override
   State<ListTileWidget> createState() => _ListTileWidgetState();
@@ -25,25 +29,14 @@ class ListTileWidget extends StatefulWidget {
 class _ListTileWidgetState extends State<ListTileWidget> {
   @override
   Widget build(BuildContext context) {
-    final homeProvider = Provider.of<AddListProvider>(context, listen: false);
-    final budgetProvider = Provider.of<BudgetProvider>(context, listen: false);
     return Consumer<BudgetProvider>(
       builder: (context, snapshot, _) {
         // Find the BudgetModel for the specific category
         BudgetModel? budgetModel = snapshot.setLimit.firstWhere(
           (model) => model.categories == widget.category,
-          orElse: () => BudgetModel(0, 0, '', false, Icons.add),
+          orElse: () => BudgetModel(0, 0, 0, '', false, Icons.add),
         );
 
-        // budgetProvider.nonBudgetedList
-        //     .asMap()
-        //     .forEach((index, nonBudgetedItem) {
-        //   int matchingIndex = homeProvider.incomeTextFormValues.value.indexWhere(
-        //     (incomeItem) =>
-        //         incomeItem.categoryName == nonBudgetedItem.categories,
-        //   );
-        //
-        // });
         TextEditingController setLimitController = TextEditingController();
         TextEditingController updateValueController =
             TextEditingController(text: budgetModel.setLimitvalue.toString());
@@ -58,9 +51,8 @@ class _ListTileWidgetState extends State<ListTileWidget> {
           ),
           subtitle: Text(
             widget.isBudgeted
-                ? "Remaining: \u{20B9} ${budgetModel.setLimitvalue.toString()}"
-                : "Spends: \u{20B9}" "0" ,
-                // " ${snapshot.nonBudgetedList[matchingIndex].spendAmount} ",
+                ? "Remaining: \u{20B9} ${widget.remainingAmount}"
+                : "Spends: \u{20B9}  ${widget.spendAmount}",
             style: TextStyle(color: black),
           ),
           trailing: widget.isBudgeted
@@ -109,6 +101,7 @@ class _ListTileWidgetState extends State<ListTileWidget> {
                                     context: context,
                                     category: widget.category,
                                     amount: updateValueController.text.trim());
+                                snapshot.categorySpends(context);
                               },
                               child: const Text(
                                 "Delete",
@@ -136,6 +129,7 @@ class _ListTileWidgetState extends State<ListTileWidget> {
                                     context: context,
                                     category: widget.category);
                                 snapshot.updateTotalBudget();
+                                snapshot.categoryRemaining(context);
                               },
                               child: Text(
                                 "Update",
@@ -223,6 +217,7 @@ class _ListTileWidgetState extends State<ListTileWidget> {
                                   int.parse(
                                     setLimitController.text.trim(),
                                   ),
+                                  0,
                                   widget.category,
                                   isBudgeted = true,
                                   widget.icon,
@@ -232,6 +227,7 @@ class _ListTileWidgetState extends State<ListTileWidget> {
                                     context,
                                     listen: false);
                                 provider.totalSpendAmount(context: context);
+                                snapshot.categoryRemaining(context);
                                 Navigator.pop(context);
                               },
                               child: Text(

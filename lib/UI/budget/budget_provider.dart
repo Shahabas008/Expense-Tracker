@@ -1,5 +1,3 @@
-import 'dart:developer';
-import 'dart:js';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,19 +11,20 @@ class BudgetProvider extends ChangeNotifier {
   String category = '';
   List<BudgetModel> budgetedList = [];
   List<BudgetModel> nonBudgetedList = [
-    BudgetModel(0, 0, "Bills and Utilities", false, Icons.payment_outlined),
-    BudgetModel(0, 0, "Others", false, Icons.note_outlined),
-    BudgetModel(0, 0, "Food and Drinks", false, Icons.fastfood_outlined),
-    BudgetModel(0, 0, "Entertainment", false, Icons.tv),
-    BudgetModel(0, 0, "Investment", false, Icons.savings_outlined),
-    BudgetModel(0, 0, "Transportations", false, Icons.directions_bus_outlined),
-    BudgetModel(0, 0, "Shopping", false, Icons.shopping_bag_outlined),
-    BudgetModel(0, 0, "Medical", false, Icons.medical_services_outlined),
-    BudgetModel(0, 0, "Education", false, Icons.school_outlined),
+    BudgetModel(0, 0, 0, "Bills and Utilities", false, Icons.payment_outlined),
+    BudgetModel(0, 0, 0, "Others", false, Icons.note_outlined),
+    BudgetModel(0, 0, 0, "Food and Drinks", false, Icons.fastfood_outlined),
+    BudgetModel(0, 0, 0, "Entertainment", false, Icons.tv),
+    BudgetModel(0, 0, 0, "Investment", false, Icons.savings_outlined),
     BudgetModel(
-        0, 0, "Gifts and Donations", false, Icons.card_giftcard_outlined),
-    BudgetModel(0, 0, "Insurance", false, Icons.newspaper_outlined),
-    BudgetModel(0, 0, "Taxes", false, Icons.money_off_csred_outlined),
+        0, 0, 0, "Transportations", false, Icons.directions_bus_outlined),
+    BudgetModel(0, 0, 0, "Shopping", false, Icons.shopping_bag_outlined),
+    BudgetModel(0, 0, 0, "Medical", false, Icons.medical_services_outlined),
+    BudgetModel(0, 0, 0, "Education", false, Icons.school_outlined),
+    BudgetModel(
+        0, 0, 0, "Gifts and Donations", false, Icons.card_giftcard_outlined),
+    BudgetModel(0, 0, 0, "Insurance", false, Icons.newspaper_outlined),
+    BudgetModel(0, 0, 0, "Taxes", false, Icons.money_off_csred_outlined),
   ];
   List<BudgetModel> setLimit = [];
 
@@ -92,20 +91,31 @@ class BudgetProvider extends ChangeNotifier {
   //Function for the category spends.
   void categorySpends(BuildContext context) {
     final homeProvider = Provider.of<AddListProvider>(context, listen: false);
-    for (int i = 0; i < homeProvider.incomeTextFormValues.value.length; i++) {
-      for (int j = 0; j < nonBudgetedList.length; j++) {
-        if (homeProvider.incomeTextFormValues.value[i].categoryName ==
-            nonBudgetedList[j].categories) {
-          nonBudgetedList[i].spendAmount = 0;
+    for (int i = 0; i < nonBudgetedList.length; i++) {
+      nonBudgetedList[i].spendAmount = 0;
+      for (int j = 0; j < homeProvider.incomeTextFormValues.value.length; j++) {
+        if (homeProvider.incomeTextFormValues.value[j].categoryName ==
+            nonBudgetedList[i].categories) {
           nonBudgetedList[i].spendAmount +=
-              homeProvider.incomeTextFormValues.value[i].expenseAmount;
-          log(nonBudgetedList[i].spendAmount.toString(),
-              name: "this is the spend amount from the nonbudgetedlist");
-          log(nonBudgetedList[i].categories.toString(),
-              name: "this is the category name from the nonbudgetedlist");
-          break; // Break the inner loop once a match is found
+              homeProvider.incomeTextFormValues.value[j].expenseAmount;
         }
       }
     }
+    notifyListeners();
+  }
+
+  //Function for the category remaining
+  void categoryRemaining(BuildContext context) {
+  //   final homeProvider = Provider.of<AddListProvider>(context, listen: false);
+  //   for (int i = 0; i < nonBudgetedList.length; i++) {
+  //     nonBudgetedList[i].spendAmount = 0;
+  //     for (int j = 0; j < homeProvider.incomeTextFormValues.value.length; j++) {
+  //       if (homeProvider.incomeTextFormValues.value[j].categoryName ==
+  //           nonBudgetedList[i].categories) {
+  //         nonBudgetedList[i].spendAmount +=
+  //             homeProvider.incomeTextFormValues.value[j].expenseAmount;
+  //       }
+  //     }
+  //   }
   }
 }
