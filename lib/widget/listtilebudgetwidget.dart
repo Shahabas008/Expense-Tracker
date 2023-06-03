@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:money_management_app/UI/budget/budget_model.dart';
@@ -8,14 +9,14 @@ import '../UI/home/provider.dart';
 import '../utils/colors.dart';
 
 class ListTileWidget extends StatefulWidget {
-  ListTileWidget(
-      {Key? key,
-      required this.category,
-      required this.icon,
-      required this.isBudgeted,
-      required this.spendAmount,
-       this.remainingAmount,})
-      : super(key: key);
+  ListTileWidget({
+    Key? key,
+    required this.category,
+    required this.icon,
+    required this.isBudgeted,
+    required this.spendAmount,
+    this.remainingAmount,
+  }) : super(key: key);
   final String category;
   IconData icon;
   bool isBudgeted;
@@ -29,6 +30,8 @@ class ListTileWidget extends StatefulWidget {
 class _ListTileWidgetState extends State<ListTileWidget> {
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Consumer<BudgetProvider>(
       builder: (context, snapshot, _) {
         // Find the BudgetModel for the specific category
@@ -58,89 +61,105 @@ class _ListTileWidgetState extends State<ListTileWidget> {
           trailing: widget.isBudgeted
               ? InkWell(
                   onTap: () {
-                    showDialog(
+                    showGeneralDialog(
                       context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          insetPadding:
-                              const EdgeInsets.fromLTRB(0, 150, 0, 360),
-                          title: const Text(
-                            "Edit Budget",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          content: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(widget.icon),
-                                  const SizedBox(
-                                    width: 10,
+                      pageBuilder: (ctx, a1, a2) {
+                        return Container();
+                      },
+                      transitionBuilder: (ctx, a1, a2, child) {
+                        var curve = Curves.easeInOut.transform(a1.value);
+                        return Transform.scale(
+                          scale: curve,
+                          child: SingleChildScrollView(
+                            child: BackdropFilter(
+                               filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                              child: AlertDialog(
+                                insetPadding: const EdgeInsets.symmetric(
+                                    horizontal: 80,
+                                    vertical: 280,
                                   ),
-                                  Text(widget.category),
+                                title: const Text(
+                                  "Edit Budget",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                content: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(widget.icon),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(widget.category),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    TextFormField(
+                                      keyboardType: TextInputType.number,
+                                      cursorColor: teal,
+                                      controller: updateValueController,
+                                      decoration: const InputDecoration(
+                                          enabledBorder: OutlineInputBorder(),
+                                          focusedBorder: OutlineInputBorder(),
+                                          hintText: "Budget"),
+                                    )
+                                  ],
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      snapshot.removeItems(
+                                          budgetModel: budgetModel,
+                                          context: context,
+                                          category: widget.category,
+                                          amount:
+                                              updateValueController.text.trim());
+                                      snapshot.categorySpends(context);
+                                    },
+                                    child: const Text(
+                                      "Delete",
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      "Cancel",
+                                      style: TextStyle(
+                                        color: teal,
+                                      ),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      snapshot.updateItem(
+                                          updateValueController:
+                                              updateValueController,
+                                          context: context,
+                                          category: widget.category);
+                                      snapshot.updateTotalBudget();
+                                      snapshot.categoryRemaining(context);
+                                    },
+                                    child: Text(
+                                      "Update",
+                                      style: TextStyle(
+                                        color: teal,
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              TextFormField(
-                                keyboardType: TextInputType.number,
-                                cursorColor: teal,
-                                controller: updateValueController,
-                                decoration: const InputDecoration(
-                                    enabledBorder: OutlineInputBorder(),
-                                    focusedBorder: OutlineInputBorder(),
-                                    hintText: "Budget"),
-                              )
-                            ],
+                            ),
                           ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                snapshot.removeItems(
-                                    budgetModel: budgetModel,
-                                    context: context,
-                                    category: widget.category,
-                                    amount: updateValueController.text.trim());
-                                snapshot.categorySpends(context);
-                              },
-                              child: const Text(
-                                "Delete",
-                                style: TextStyle(
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text(
-                                "Cancel",
-                                style: TextStyle(
-                                  color: teal,
-                                ),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                snapshot.updateItem(
-                                    updateValueController:
-                                        updateValueController,
-                                    context: context,
-                                    category: widget.category);
-                                snapshot.updateTotalBudget();
-                                snapshot.categoryRemaining(context);
-                              },
-                              child: Text(
-                                "Update",
-                                style: TextStyle(
-                                  color: teal,
-                                ),
-                              ),
-                            ),
-                          ],
                         );
                       },
+                      transitionDuration: const Duration(milliseconds: 300),
                     );
                   },
                   child: Container(
@@ -160,86 +179,101 @@ class _ListTileWidgetState extends State<ListTileWidget> {
                 )
               : InkWell(
                   onTap: () {
-                    showDialog(
+                    showGeneralDialog(
                       context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          insetPadding:
-                              const EdgeInsets.fromLTRB(0, 150, 0, 360),
-                          title: const Text(
-                            "Set Budget",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          content: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(widget.icon),
-                                  const SizedBox(
-                                    width: 10,
+                      pageBuilder: (ctx, a1, a2) {
+                        return Container();
+                      },
+                      transitionBuilder: (ctx, a1, a2, child) {
+                        var curve = Curves.easeInOut.transform(a1.value);
+                        return Transform.scale(
+                          scale: curve,
+                          child: SingleChildScrollView(
+                            child: BackdropFilter(
+                               filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                              child: AlertDialog(
+                                insetPadding: const EdgeInsets.symmetric(
+                                  horizontal: 80,
+                                  vertical: 280,
+                                ),
+                                title: const Text(
+                                  "Set Budget",
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                content: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Icon(widget.icon),
+                                        const SizedBox(
+                                          width: 10,
+                                        ),
+                                        Text(widget.category),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    TextFormField(
+                                      keyboardType: TextInputType.number,
+                                      cursorColor: teal,
+                                      controller: setLimitController,
+                                      decoration: const InputDecoration(
+                                          enabledBorder: OutlineInputBorder(),
+                                          focusedBorder: OutlineInputBorder(),
+                                          hintText: "Budget"),
+                                    )
+                                  ],
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      "Cancel",
+                                      style: TextStyle(
+                                        color: teal,
+                                      ),
+                                    ),
                                   ),
-                                  Text(widget.category),
+                                  TextButton(
+                                    onPressed: () {
+                                      bool isBudgeted;
+                                      final access = BudgetModel(
+                                        int.parse(
+                                          setLimitController.text.trim(),
+                                        ),
+                                        int.parse(
+                                          setLimitController.text.trim(),
+                                        ),
+                                        0,
+                                        widget.category,
+                                        isBudgeted = true,
+                                        widget.icon,
+                                      );
+                                      snapshot.settingLimit(access, context);
+                                      final provider =
+                                          Provider.of<AddListProvider>(context,
+                                              listen: false);
+                                      provider.totalSpendAmount(context: context);
+                                      snapshot.categoryRemaining(context);
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text(
+                                      "Save",
+                                      style: TextStyle(
+                                        color: teal,
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              TextFormField(
-                                keyboardType: TextInputType.number,
-                                cursorColor: teal,
-                                controller: setLimitController,
-                                decoration: const InputDecoration(
-                                    enabledBorder: OutlineInputBorder(),
-                                    focusedBorder: OutlineInputBorder(),
-                                    hintText: "Budget"),
-                              )
-                            ],
+                            ),
                           ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text(
-                                "Cancel",
-                                style: TextStyle(
-                                  color: teal,
-                                ),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                bool isBudgeted;
-                                final access = BudgetModel(
-                                  int.parse(
-                                    setLimitController.text.trim(),
-                                  ),
-                                  int.parse(
-                                    setLimitController.text.trim(),
-                                  ),
-                                  0,
-                                  widget.category,
-                                  isBudgeted = true,
-                                  widget.icon,
-                                );
-                                snapshot.settingLimit(access, context);
-                                final provider = Provider.of<AddListProvider>(
-                                    context,
-                                    listen: false);
-                                provider.totalSpendAmount(context: context);
-                                snapshot.categoryRemaining(context);
-                                Navigator.pop(context);
-                              },
-                              child: Text(
-                                "Save",
-                                style: TextStyle(
-                                  color: teal,
-                                ),
-                              ),
-                            ),
-                          ],
                         );
                       },
+                      transitionDuration: const Duration(milliseconds: 300),
                     );
                   },
                   child: Container(

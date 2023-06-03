@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:money_management_app/UI/addBugdet/addBudgetprovider.dart';
+import 'package:intl/intl.dart';
+import 'package:money_management_app/UI/addBugdet/addbudgetprovider.dart';
 import 'package:money_management_app/UI/home/model.dart';
 import 'package:money_management_app/UI/home/provider.dart';
+import 'package:money_management_app/utils/snackbars.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/colors.dart';
@@ -48,6 +50,8 @@ class _AddBudgetState extends State<AddBudget> {
   Color bgColorOfContainer = Colors.transparent;
   bool isEdit = false;
   String categoryName = "";
+  String? currentDate;
+  String? currentTime;
 
   @override
   void initState() {
@@ -80,6 +84,11 @@ class _AddBudgetState extends State<AddBudget> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+       currentDate =
+          DateFormat('EEE, MMM dd, yyyy').format(DateTime.now());
+       currentTime = DateFormat("hh:mm a").format(DateTime.now());
+    });
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Consumer3<AddListProvider, AddBudgetProvider, BudgetProvider>(
@@ -256,7 +265,7 @@ class _AddBudgetState extends State<AddBudget> {
                               width: 5,
                             ),
                             Text(
-                              snapshot.currentDate,
+                              currentDate!,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey,
@@ -279,7 +288,7 @@ class _AddBudgetState extends State<AddBudget> {
                               width: 5,
                             ),
                             Text(
-                              snapshot.currentTime,
+                              currentTime!,
                               style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey,
@@ -787,6 +796,11 @@ class _AddBudgetState extends State<AddBudget> {
                               minimumSize: Size(width * 1.5, height * 0.07),
                             ),
                             onPressed: () {
+                              if (iconCategory == null) {
+                                Snack.showSnackbar(
+                                    context: context,
+                                    message: "Please select a category.");
+                              }
                               if (formKey.currentState!.validate()) {
                                 int incomeAmount = 0;
                                 int expenseAmount = 0;
@@ -813,7 +827,7 @@ class _AddBudgetState extends State<AddBudget> {
                                   }
                                 }
                                 final access = ValueOfTextForm(
-                                  categoryName!,
+                                  categoryName,
                                   incomeAmount,
                                   expenseAmount,
                                   noteController.text.trim(),

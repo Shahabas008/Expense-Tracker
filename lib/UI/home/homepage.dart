@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:money_management_app/UI/addBugdet/addbudget.dart';
 import 'package:money_management_app/UI/home/provider.dart';
+import 'package:money_management_app/utils/animation.dart';
 import 'package:money_management_app/utils/gradienttext.dart';
 import 'package:provider/provider.dart';
 import '../../utils/colors.dart';
-import '../addBugdet/addBudgetprovider.dart';
+import '../addBugdet/addbudgetprovider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -203,11 +204,18 @@ class _HomePageState extends State<HomePage> {
                   ),
                   snapshot.incomeTextFormValues.value.isEmpty
                       ? Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Image.asset(
-                              "asset/HOMEPAGE.png",
-                              width: 250,
-                              height: 250,
+                            SizedBox(
+                              width: double.infinity,
+                              height: height*0.3,
+                              child: Image.asset(
+                                "asset/HOMEPAGE.png",
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
                             ),
                             Text(
                               "No Transactions",
@@ -350,10 +358,7 @@ class _HomePageState extends State<HomePage> {
             foregroundColor: teal,
             elevation: 8,
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AddBudget()),
-              );
+              Navigator.of(context).push(AnimationClass().navigateToAddBudgetPage());
             },
             child: const Icon(Icons.add),
           ),

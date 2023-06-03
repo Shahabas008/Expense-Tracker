@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:money_management_app/UI/bottomnavigationbar.dart';
 import 'package:money_management_app/UI/home/homepage.dart';
 import 'package:provider/provider.dart';
@@ -13,8 +12,6 @@ class AddListProvider extends ChangeNotifier {
   int expenseHome = 0;
   int balanceHome = 0;
   late int selectedIndexHome;
-  String currentDate = DateFormat('EEE, MMM dd, yyyy').format(DateTime.now());
-  String currentTime = DateFormat("hh:mm a").format(DateTime.now());
   ValueNotifier<List<ValueOfTextForm>> incomeTextFormValues = ValueNotifier([]);
 
   //Functions

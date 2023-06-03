@@ -37,12 +37,15 @@ class StatsPage extends StatelessWidget {
       ),
       body: provider.expenseHome == 0 && provider.incomeHome == 0
           ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Center(
-                  child: Image.asset("asset/stats.png",
-                  width: width*0.6,
-                  height: height*0.6,),
-                ),
+              SizedBox(
+                width: double.infinity,
+                height: height*0.45,
+                child: Image.asset("asset/stats.png",
+                fit: BoxFit.fill,
+               ),
+              ),
                Text("You Haven't Added Expense/Income To Show The Statistics.",
               style: TextStyle(
                 color: primary,

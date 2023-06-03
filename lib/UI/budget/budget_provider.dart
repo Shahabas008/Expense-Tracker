@@ -1,3 +1,4 @@
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -106,16 +107,21 @@ class BudgetProvider extends ChangeNotifier {
 
   //Function for the category remaining
   void categoryRemaining(BuildContext context) {
-  //   final homeProvider = Provider.of<AddListProvider>(context, listen: false);
-  //   for (int i = 0; i < nonBudgetedList.length; i++) {
-  //     nonBudgetedList[i].spendAmount = 0;
-  //     for (int j = 0; j < homeProvider.incomeTextFormValues.value.length; j++) {
-  //       if (homeProvider.incomeTextFormValues.value[j].categoryName ==
-  //           nonBudgetedList[i].categories) {
-  //         nonBudgetedList[i].spendAmount +=
-  //             homeProvider.incomeTextFormValues.value[j].expenseAmount;
-  //       }
-  //     }
-  //   }
+    final homeProvider = Provider.of<AddListProvider>(context, listen: false);
+    for (int i = 0; i < budgetedList.length; i++) {
+      budgetedList[i].spendAmount = 0;
+      for (int j = 0; j < homeProvider.incomeTextFormValues.value.length; j++) {
+        if (homeProvider.incomeTextFormValues.value[j].categoryName ==
+            budgetedList[i].categories) {
+          budgetedList[i].spendAmount +=
+              homeProvider.incomeTextFormValues.value[j].expenseAmount;
+        }
+      }
+    }
+    for (int i = 0; i < budgetedList.length; i++) {
+      budgetedList[i].remainingAmount = 0;
+      budgetedList[i].remainingAmount =
+          budgetedList[i].setLimitvalue - budgetedList[i].spendAmount;
+    }
   }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:money_management_app/UI/home/provider.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/colors.dart';
 
@@ -7,6 +9,7 @@ class MorePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final homeProvider = Provider.of<AddListProvider>(context, listen: false);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: white,
@@ -14,7 +17,7 @@ class MorePage extends StatelessWidget {
         elevation: 0,
         backgroundColor: white,
         title:  Text(
-          "More",
+          "Settings",
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: black
@@ -43,15 +46,30 @@ class MorePage extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      "Overall : ",//display the current total amount
-                      style: TextStyle(
-                        color: black,
+                      "Overall : ${homeProvider.balanceHome}",
+                      style: const TextStyle(
+                        color: Colors.green,
                       ),
                     ),
                   ],
                 ),
              const Spacer(),
-                TextButton(onPressed: () {}, child:  Text("ADD NEW",
+                TextButton(onPressed: () {
+                  showDialog(context: context, builder:(_) {
+                    return   AlertDialog(
+                      title:  const Text("New Feature"),
+                      content: const Text("OOPs! Sorry the team is working on it."),
+                      actions: [
+                        TextButton(onPressed: () {
+                          Navigator.pop(context);
+                        }, child:  Text("OK",
+                        style: TextStyle(
+                          color: teal,
+                        ),),),
+                      ],
+                    );
+                  },);
+                }, child:  Text("ADD NEW",
                 style: TextStyle(
                   color: teal,
                 ),)),

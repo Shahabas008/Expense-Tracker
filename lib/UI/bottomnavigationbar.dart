@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_management_app/UI/budget/budgetpage.dart';
 import 'package:money_management_app/UI/home/homepage.dart';
-import 'package:money_management_app/UI/morepage.dart';
+import 'package:money_management_app/UI/setting.dart';
 import 'package:money_management_app/UI/stats.dart';
 
 import '../utils/colors.dart';
@@ -18,7 +18,7 @@ class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
   int _selectedIndex = 0;
 
   List pages = [
-     HomePage(),
+    const HomePage(),
     const BudgetPage(),
     const StatsPage(),
     const MorePage(),

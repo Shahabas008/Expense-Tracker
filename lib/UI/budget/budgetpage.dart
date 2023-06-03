@@ -16,8 +16,10 @@ class BudgetPage extends StatefulWidget {
 class _BudgetPageState extends State<BudgetPage> {
   @override
   Widget build(BuildContext context) {
-    return Consumer2<BudgetProvider , AddListProvider>(
-      builder: (context, snapshot , snapshot2, _) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
+    return Consumer2<BudgetProvider, AddListProvider>(
+      builder: (context, snapshot, snapshot2, _) {
         return Scaffold(
           backgroundColor: white,
           appBar: AppBar(
@@ -34,10 +36,13 @@ class _BudgetPageState extends State<BudgetPage> {
               snapshot.budgetedList.isEmpty
                   ? Column(
                       children: [
-                        Image.asset(
-                          "asset/notbudgeted.png",
-                          width: 180,
-                          height: 180,
+                        SizedBox(
+                          width: width * 0.65,
+                          height: height * 0.25,
+                          child: Image.asset(
+                            "asset/notbudgeted.png",
+                            fit: BoxFit.fill,
+                          ),
                         ),
                         const Text(
                           "Budget Not Set For This Month",
@@ -86,7 +91,7 @@ class _BudgetPageState extends State<BudgetPage> {
                                   color: black, fontWeight: FontWeight.bold),
                             ),
                             Text(
-                           "\u{20B9} ${snapshot.totalRemaining}",
+                              "\u{20B9} ${snapshot.totalRemaining}",
                               style: TextStyle(color: teal),
                             ), // display the Left
                           ],
@@ -145,7 +150,7 @@ class _BudgetPageState extends State<BudgetPage> {
                       category: category.categories,
                       icon: category.icon,
                       isBudgeted: category.isBudgeted,
-                      spendAmount : snapshot.nonBudgetedList[index].spendAmount,
+                      spendAmount: snapshot.nonBudgetedList[index].spendAmount,
                     );
                   },
                 ),
