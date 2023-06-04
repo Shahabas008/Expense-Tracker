@@ -253,7 +253,7 @@ class _HomePageState extends State<HomePage> {
                               height: 3.0,
                               thickness: 1.0,
                               indent: 0.0,
-                              endIndent: 350.0,
+                              endIndent: 300.0,
                             ),
                             const SizedBox(
                               height: 20.0,
@@ -330,18 +330,40 @@ class _HomePageState extends State<HomePage> {
                                                   .value[index]
                                                   .selectedIndexHome ==
                                               1
-                                          ? Text(
-                                              "+ \u{20B9} ${snapshot.incomeTextFormValues.value[index].incomeAmount}",
+                                          ? Column(
+                                            children: [
+                                              Text(snapshot.incomeTextFormValues.value[index].currentTime,
                                               style: const TextStyle(
-                                                color: Colors.green,
+                                                color: Color.fromARGB(255, 111, 110, 110),
+                                              ),),
+                                              const SizedBox(
+                                                height: 13,
                                               ),
-                                            )
-                                          : Text(
-                                              " - \u{20B9} ${snapshot.incomeTextFormValues.value[index].expenseAmount}",
+                                              Text(
+                                                  "+ \u{20B9} ${snapshot.incomeTextFormValues.value[index].incomeAmount}",
+                                                  style: const TextStyle(
+                                                    color: Colors.green,
+                                                  ),
+                                                ),
+                                            ],
+                                          )
+                                          : Column(
+                                            children: [
+                                              Text(snapshot.incomeTextFormValues.value[index].currentTime,
                                               style: const TextStyle(
-                                                color: Colors.red,
+                                                color: Color.fromARGB(255, 111, 110, 110),
+                                              ),),
+                                              const SizedBox(
+                                                height: 13,
                                               ),
-                                            ),
+                                              Text(
+                                                  " - \u{20B9} ${snapshot.incomeTextFormValues.value[index].expenseAmount}",
+                                                  style: const TextStyle(
+                                                    color: Colors.red,
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
                                     ),
                                   );
                                 },

@@ -9,7 +9,9 @@ class ValueOfTextForm {
   int selectedIndexHome;
   IconData categoryIcon;
   Color bgColorOfContainer;
+  String currentDate;
+  String currentTime;
 
   ValueOfTextForm(this.categoryName, this.incomeAmount , this.expenseAmount ,this.note, this.title, this.selectedIndexHome,
-      this.categoryIcon,this.bgColorOfContainer);
+      this.categoryIcon,this.bgColorOfContainer,this.currentDate,this.currentTime);
 }

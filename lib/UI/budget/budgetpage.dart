@@ -25,9 +25,8 @@ class _BudgetPageState extends State<BudgetPage> {
           appBar: AppBar(
             elevation: 0,
             backgroundColor: white,
-            centerTitle: true,
             title: Text(
-              "Date",
+              "Budget",
               style: TextStyle(fontWeight: FontWeight.bold, color: black),
             ),
           ),

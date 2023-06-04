@@ -837,6 +837,8 @@ class _AddBudgetState extends State<AddBudget> {
                                   iconCategory!,
                                   //saving the bgColor to access in the homepage.
                                   bgColorOfContainer,
+                                  currentDate!,
+                                  currentTime!,
                                 );
                                 selectedContainerIndex == 1
                                     ? snapshot.addingIncome(access, context)
@@ -859,7 +861,6 @@ class _AddBudgetState extends State<AddBudget> {
                                     }
                                   }
                                 }
-
                                 snapshot3.categorySpends(context);
                                 snapshot3.categoryRemaining(context);
                               }

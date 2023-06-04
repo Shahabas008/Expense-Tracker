@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -9,7 +8,7 @@ import '../UI/home/provider.dart';
 import '../utils/colors.dart';
 
 class ListTileWidget extends StatefulWidget {
-  ListTileWidget({
+  const ListTileWidget({
     Key? key,
     required this.category,
     required this.icon,
@@ -18,10 +17,10 @@ class ListTileWidget extends StatefulWidget {
     this.remainingAmount,
   }) : super(key: key);
   final String category;
-  IconData icon;
-  bool isBudgeted;
-  int spendAmount;
-  int? remainingAmount;
+  final IconData icon;
+  final bool isBudgeted;
+  final int spendAmount;
+  final int? remainingAmount;
 
   @override
   State<ListTileWidget> createState() => _ListTileWidgetState();
