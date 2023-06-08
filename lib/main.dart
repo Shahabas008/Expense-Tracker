@@ -1,24 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:money_management_app/UI/addBugdet/addbudget.dart';
-import 'package:money_management_app/UI/bottomnavigationbar.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:money_management_app/UI/addBugdet/addbudgetmodel.dart';
+import 'package:money_management_app/UI/budget/budget_model.dart';
+
 import 'package:money_management_app/UI/budget/budget_provider.dart';
-import 'package:money_management_app/UI/budget/budgetpage.dart';
-import 'package:money_management_app/UI/home/homepage.dart';
+import 'package:money_management_app/UI/home/model.dart';
+
 import 'package:money_management_app/UI/home/provider.dart';
-import 'package:money_management_app/UI/setting.dart';
-import 'package:money_management_app/UI/stats.dart';
+
+import 'package:money_management_app/widget/bottomnavigationbar.dart';
 import 'package:provider/provider.dart';
 
 import 'UI/addBugdet/addbudgetprovider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Hive.initFlutter();
+  if(!Hive.isAdapterRegistered(BudgetModelAdapter().typeId)){
+    Hive.registerAdapter(BudgetModelAdapter());
+  }
+  if(!Hive.isAdapterRegistered(AddBudgetModelAdapter().typeId)){
+    Hive.registerAdapter(AddBudgetModelAdapter());
+  }
+  if(!Hive.isAdapterRegistered(ValueOfTextFormAdapter().typeId)){
+    Hive.registerAdapter(ValueOfTextFormAdapter());
+  }
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+ 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -27,7 +40,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => BudgetProvider()),
         ChangeNotifierProvider(create: (_) => AddBudgetProvider()),
       ],
-      child:MaterialApp(
+      child:const MaterialApp(
         debugShowCheckedModeBanner: false,
         home: BottomNavigationBarPage(),
       ),

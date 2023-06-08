@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:money_management_app/UI/bottomnavigationbar.dart';
-import 'package:money_management_app/UI/home/homepage.dart';
+import 'package:money_management_app/widget/bottomnavigationbar.dart';
 import 'package:provider/provider.dart';
 import '../budget/budget_provider.dart';
 import 'model.dart';
