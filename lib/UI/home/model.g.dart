@@ -27,13 +27,13 @@ class ValueOfTextFormAdapter extends TypeAdapter<ValueOfTextForm> {
       fields[7] as Color,
       fields[8] as String,
       fields[9] as String,
-    );
+    )..id = fields[10] as int?;
   }
 
   @override
   void write(BinaryWriter writer, ValueOfTextForm obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.categoryName)
       ..writeByte(1)
@@ -53,7 +53,9 @@ class ValueOfTextFormAdapter extends TypeAdapter<ValueOfTextForm> {
       ..writeByte(8)
       ..write(obj.currentDate)
       ..writeByte(9)
-      ..write(obj.currentTime);
+      ..write(obj.currentTime)
+      ..writeByte(10)
+      ..write(obj.id);
   }
 
   @override

@@ -3,7 +3,7 @@ import 'package:hive_flutter/adapters.dart';
 part 'model.g.dart';
 
 @HiveType(typeId: 3)
-class ValueOfTextForm {
+  class ValueOfTextForm {
   @HiveField(0)
   String categoryName;
 
@@ -34,6 +34,9 @@ class ValueOfTextForm {
   @HiveField(9)
   String currentTime;
 
+  @HiveField(10)
+  int? id;
+
   ValueOfTextForm(
       this.categoryName,
       this.incomeAmount,
@@ -44,5 +47,6 @@ class ValueOfTextForm {
       this.categoryIcon,
       this.bgColorOfContainer,
       this.currentDate,
-      this.currentTime);
+      this.currentTime,
+      );
 }

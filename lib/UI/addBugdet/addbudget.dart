@@ -864,6 +864,7 @@ class _AddBudgetState extends State<AddBudget> {
                                 snapshot3.categorySpends(context);
                                 snapshot3.categoryRemaining(context);
                               }
+                              Navigator.pop(context);
                             },
                             child: Text(
                               "Save",

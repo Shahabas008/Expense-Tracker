@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:money_management_app/widget/bottomnavigationbar.dart';
 import 'package:provider/provider.dart';
 import '../budget/budget_provider.dart';
@@ -14,23 +15,46 @@ class AddListProvider extends ChangeNotifier {
   ValueNotifier<List<ValueOfTextForm>> incomeTextFormValues = ValueNotifier([]);
 
   //Functions
-  void addingIncome(ValueOfTextForm value, BuildContext context) {
+  Future<void> addingIncome(ValueOfTextForm value, BuildContext context) async{
+    final homePageBox = await Hive.openBox<ValueOfTextForm>("HomePageBox");
+    final listId = await homePageBox.add(value);
+    log("this is after the adding of the value to the hive");
+    value.id = listId;
+    await homePageBox.put(listId, value);
     incomeTextFormValues.value.add(value);
+    log("this is after the adding of the value to the hive");
+
+    final homePageVariableBox = await Hive.openBox<dynamic>("HomePageVariableBox");
     incomeHome += value.incomeAmount;
+    await homePageVariableBox.put("incomeHome", incomeHome);
     balanceHome += value.incomeAmount;
+    await homePageVariableBox.put("balanceHome", balanceHome);
     selectedIndexHome = value.selectedIndexHome;
-    Navigator.pop(context);
     notifyListeners();
   }
 
-  void addingExpense(ValueOfTextForm value, BuildContext context) {
+  Future<void> addingExpense(ValueOfTextForm value, BuildContext context) async{
+    final homePageBox = await Hive.openBox<ValueOfTextForm>("HomePageBox");
+    final listId = await homePageBox.add(value);
+    value.id = listId;
+    await homePageBox.put(listId, value);
     incomeTextFormValues.value.add(value);
+    final homePageVariableBox = await Hive.openBox<dynamic>("HomePageVariableBox");
     balanceHome = balanceHome - value.expenseAmount;
+    await homePageVariableBox.put("balanceHome", balanceHome);
     expenseHome += value.expenseAmount;
+    await homePageVariableBox.put("expenseHome", expenseHome);
     selectedIndexHome = value.selectedIndexHome;
-    Navigator.pop(context);
+    // Navigator.pop(context);
     notifyListeners();
   }
+
+  Future<void> getHomeElements() async{
+    final homePageBox = await Hive.openBox<ValueOfTextForm>("HomePageBox");
+    final incomeExpenseList = homePageBox.values.toList();
+    incomeTextFormValues.value.addAll(incomeExpenseList);
+  }
+
 
   //Updating the elements of the list in the updating page
   void updateListElements({
