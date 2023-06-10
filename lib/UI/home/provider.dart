@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:money_management_app/widget/bottomnavigationbar.dart';
 import 'package:provider/provider.dart';
 import '../budget/budget_provider.dart';
 import 'model.dart';
@@ -15,149 +14,92 @@ class AddListProvider extends ChangeNotifier {
   ValueNotifier<List<ValueOfTextForm>> incomeTextFormValues = ValueNotifier([]);
 
   //Functions
-  Future<void> addingIncome(ValueOfTextForm value, BuildContext context) async{
+  //ADDING THE INCOME TRANSACTION TO THE HOME PAGE
+  Future<void> addingIncome(ValueOfTextForm value, BuildContext context) async {
     final homePageBox = await Hive.openBox<ValueOfTextForm>("HomePageBox");
     final listId = await homePageBox.add(value);
-    log("this is after the adding of the value to the hive");
     value.id = listId;
     await homePageBox.put(listId, value);
     incomeTextFormValues.value.add(value);
-    log("this is after the adding of the value to the hive");
-
-    final homePageVariableBox = await Hive.openBox<dynamic>("HomePageVariableBox");
+    final homePageVariableBox =
+        await Hive.openBox<dynamic>("HomePageVariableBox");
     incomeHome += value.incomeAmount;
-    await homePageVariableBox.put("incomeHome", incomeHome);
+    await homePageVariableBox.put("incomeHomeHive", incomeHome);
+    incomeHome = await homePageVariableBox.get("incomeHomeHive");
     balanceHome += value.incomeAmount;
     await homePageVariableBox.put("balanceHome", balanceHome);
     selectedIndexHome = value.selectedIndexHome;
+    getHomeElements();
     notifyListeners();
   }
 
-  Future<void> addingExpense(ValueOfTextForm value, BuildContext context) async{
+  //ADDING THE EXPENSE TRANSACTION TO THE HOME PAGE
+  Future<void> addingExpense(
+      ValueOfTextForm value, BuildContext context) async {
     final homePageBox = await Hive.openBox<ValueOfTextForm>("HomePageBox");
     final listId = await homePageBox.add(value);
     value.id = listId;
     await homePageBox.put(listId, value);
     incomeTextFormValues.value.add(value);
-    final homePageVariableBox = await Hive.openBox<dynamic>("HomePageVariableBox");
+    final homePageVariableBox =
+        await Hive.openBox<dynamic>("HomePageVariableBox");
     balanceHome = balanceHome - value.expenseAmount;
     await homePageVariableBox.put("balanceHome", balanceHome);
     expenseHome += value.expenseAmount;
     await homePageVariableBox.put("expenseHome", expenseHome);
     selectedIndexHome = value.selectedIndexHome;
-    // Navigator.pop(context);
+    getHomeElements();
     notifyListeners();
   }
 
-  Future<void> getHomeElements() async{
+  //DISPLAY THE HIVE DATA TO THE HOME PAGE ( INCOME AND EXPENSE )
+  Future<void> getHomeElements() async {
     final homePageBox = await Hive.openBox<ValueOfTextForm>("HomePageBox");
+    incomeTextFormValues.value.clear();
+    expenseHome = 0;
+    incomeHome = 0;
+    balanceHome = 0;
     final incomeExpenseList = homePageBox.values.toList();
+    for (int i = 0; i < incomeExpenseList.length; i++) {
+      expenseHome += incomeExpenseList[i].expenseAmount;
+      incomeHome += incomeExpenseList[i].incomeAmount;
+      balanceHome = incomeHome - expenseHome;
+    }
     incomeTextFormValues.value.addAll(incomeExpenseList);
   }
 
-
-  //Updating the elements of the list in the updating page
-  void updateListElements({
-    required String titleController,
-    required String widgetTitle,
-    required int incomeAmountController,
-    required int expenseAmountController,
-    required int widgetIncomeAmount,
-    required int widgetExpenseAmount,
-    required String noteController,
-    required String widgetNote,
-    required BuildContext context,
-    required int widgetSelectedContainerIndex,
-    required int currentContainerIndex,
-    required IconData icon,
-    required IconData widgetIcon,
-    required Color widgetContainerColor,
-    required Color currentContainerColor,
-  }) {
-    //Fetching the index of the elements.
-    final titleIndex = incomeTextFormValues.value
-        .indexWhere((element) => element.title == widgetTitle);
-    final noteIndex = incomeTextFormValues.value
-        .indexWhere((element) => element.note == widgetNote);
-    final incomeAmountIndex = incomeTextFormValues.value
-        .indexWhere((element) => element.incomeAmount == widgetIncomeAmount);
-    final expenseAmountIndex = incomeTextFormValues.value
-        .indexWhere((element) => element.expenseAmount == widgetExpenseAmount);
-    final selectedContainerIndex = incomeTextFormValues.value.indexWhere(
-            (element) =>
-        element.selectedIndexHome == widgetSelectedContainerIndex);
-    final iconIndex = incomeTextFormValues.value
-        .indexWhere((element) => element.categoryIcon == widgetIcon);
-    final containerColorIndex = incomeTextFormValues.value.indexWhere(
-            (element) => element.bgColorOfContainer == widgetContainerColor);
-    //If statement
-    if (titleIndex != -1 &&
-        noteIndex != -1 &&
-        incomeAmountIndex != -1 &&
-        expenseAmountIndex != -1 &&
-        selectedContainerIndex != -1 &&
-        iconIndex != -1 &&
-        containerColorIndex != -1) {
-      incomeTextFormValues.value[titleIndex].title = titleController;
-      incomeTextFormValues.value[noteIndex].note = noteController;
-      incomeTextFormValues.value[incomeAmountIndex].incomeAmount =
-      currentContainerIndex == 1 ? incomeAmountController : 0;
-      incomeTextFormValues.value[expenseAmountIndex].expenseAmount =
-      currentContainerIndex == 2 ? expenseAmountController : 0;
-      incomeTextFormValues.value[selectedContainerIndex].selectedIndexHome =
-          currentContainerIndex;
-      incomeTextFormValues.value[iconIndex].categoryIcon = icon;
-      incomeTextFormValues.value[containerColorIndex].bgColorOfContainer =
-          currentContainerColor;
-
-      //updating the incomeHome and balanceHome
-      incomeHome = incomeHome - widgetIncomeAmount;
-      incomeHome = incomeHome +
-          incomeTextFormValues.value[incomeAmountIndex].incomeAmount;
-      balanceHome = balanceHome - widgetIncomeAmount;
-      balanceHome = balanceHome +
-          incomeTextFormValues.value[incomeAmountIndex].incomeAmount;
-      //updating the expenseHome and balanceHome
-      expenseHome = expenseHome - widgetExpenseAmount;
-      expenseHome = expenseHome +
-          incomeTextFormValues.value[expenseAmountIndex].expenseAmount;
-      balanceHome = balanceHome + widgetExpenseAmount;
-      balanceHome = balanceHome -
-          incomeTextFormValues.value[expenseAmountIndex].expenseAmount;
-      notifyListeners();
-    } else {
-      log('Error');
-    }
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const BottomNavigationBarPage(),
-      ),
-    );
+  //UPDATING THE ELEMENT OF THE LIST TO DISPLAY IN THE HOME PAGE
+  Future<void> updateListElements({
+    required int id,
+    required ValueOfTextForm value,
+  }) async {
+    final homePageBox = await Hive.openBox<ValueOfTextForm>("HomePageBox");
+    homePageBox.put(id, value);
+    final indexOfCategory = homePageBox.get(id);
+    indexOfCategory!.selectedIndexHome == 1 
+    ? indexOfCategory.expenseAmount = 0
+    : indexOfCategory.incomeAmount = 0 ;
+    getHomeElements();
     notifyListeners();
   }
 
   //removing the list from the homepage and updating the amount and balance
-  void removeListFromHomePage({required BuildContext context,
-    required String widgetTitle,
-    required int incomeWidgetAmount,
-    required int expenseWidgetAmount,
-    required int selectedContainerIndex}) {
-    final index = incomeTextFormValues.value
-        .indexWhere((element) => element.title == widgetTitle);
-    incomeTextFormValues.value.removeAt(index);
-    incomeHome = incomeHome - incomeWidgetAmount;
-    expenseHome = expenseHome - expenseWidgetAmount;
-    selectedContainerIndex == 1
-        ? balanceHome = balanceHome - incomeWidgetAmount
-        : balanceHome = balanceHome + expenseWidgetAmount;
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const BottomNavigationBarPage(),
-      ),
-    );
+  Future<void> removeListFromHomePage({required int id}) async {
+    final homePageBox = await Hive.openBox<ValueOfTextForm>("HomePageBox");
+    final listElement = homePageBox.get(id);
+    incomeHome -= listElement!.incomeAmount;
+    expenseHome -= listElement.expenseAmount;
+    listElement.selectedIndexHome == 1
+        ? balanceHome -= listElement.incomeAmount
+        : balanceHome += listElement.expenseAmount;
+    await homePageBox.delete(id);
+    final index =
+        incomeTextFormValues.value.indexWhere((element) => element.id == id);
+    if (index != -1) {
+      incomeTextFormValues.value.removeAt(index);
+      getHomeElements();
+      incomeTextFormValues.notifyListeners();
+    }
   }
 
   //Total spend of the displayed list on the home page to show on the budget page (Total Spend)
@@ -184,9 +126,9 @@ class AddListProvider extends ChangeNotifier {
   }
 
   //total Remaining on the budget page
-void totalRemaining(BuildContext context) {
+  void totalRemaining(BuildContext context) {
     totalSpendAmount(context: context);
-    final provider = Provider.of<BudgetProvider>(context , listen: false);
+    final provider = Provider.of<BudgetProvider>(context, listen: false);
     provider.totalRemaining = provider.totalBudget - totalSpendValue;
   }
 }

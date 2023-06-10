@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:money_management_app/UI/addBugdet/addbudget.dart';
 import 'package:money_management_app/UI/home/provider.dart';
@@ -18,10 +21,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
-    final homeProvider = Provider.of<AddListProvider>(context , listen:false);
-    homeProvider.incomeTextFormValues;
+    final homeProvider = Provider.of<AddListProvider>(context, listen: false);
+    homeProvider.getHomeElements();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -210,11 +214,11 @@ class _HomePageState extends State<HomePage> {
                   ),
                   snapshot.incomeTextFormValues.value.isEmpty
                       ? Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             SizedBox(
                               width: double.infinity,
-                              height: height*0.3,
+                              height: height * 0.3,
                               child: Image.asset(
                                 "asset/HOMEPAGE.png",
                                 fit: BoxFit.fill,
@@ -286,6 +290,8 @@ class _HomePageState extends State<HomePage> {
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => AddBudget(
+                                            id: snapshot.incomeTextFormValues
+                                                .value[index].id!,
                                             incomeAmount: snapshot
                                                 .incomeTextFormValues
                                                 .value[index]
@@ -313,12 +319,12 @@ class _HomePageState extends State<HomePage> {
                                       );
                                     },
                                     child: ListTile(
-                                      leading: Icon(
-                                        snapshot.incomeTextFormValues
-                                            .value[index].categoryIcon,
-                                        color: snapshot.incomeTextFormValues
-                                            .value[index].bgColorOfContainer,
-                                      ),
+                                      // leading: Icon(
+                                      //   snapshot.incomeTextFormValues
+                                      //       .value[index].categoryIcon,
+                                      //   color: snapshot.incomeTextFormValues
+                                      //       .value[index].bgColorOfContainer,
+                                      // ),
                                       //display the category icon here
                                       subtitle: Text(snapshot
                                           .incomeTextFormValues
@@ -337,39 +343,47 @@ class _HomePageState extends State<HomePage> {
                                                   .selectedIndexHome ==
                                               1
                                           ? Column(
-                                            children: [
-                                              Text(snapshot.incomeTextFormValues.value[index].currentTime,
-                                              style: const TextStyle(
-                                                color: Color.fromARGB(255, 111, 110, 110),
-                                              ),),
-                                              const SizedBox(
-                                                height: 13,
-                                              ),
-                                              Text(
+                                              children: [
+                                                Text(
+                                                  snapshot.incomeTextFormValues
+                                                      .value[index].currentTime,
+                                                  style: const TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 111, 110, 110),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 13,
+                                                ),
+                                                Text(
                                                   "+ \u{20B9} ${snapshot.incomeTextFormValues.value[index].incomeAmount}",
                                                   style: const TextStyle(
                                                     color: Colors.green,
                                                   ),
                                                 ),
-                                            ],
-                                          )
+                                              ],
+                                            )
                                           : Column(
-                                            children: [
-                                              Text(snapshot.incomeTextFormValues.value[index].currentTime,
-                                              style: const TextStyle(
-                                                color: Color.fromARGB(255, 111, 110, 110),
-                                              ),),
-                                              const SizedBox(
-                                                height: 13,
-                                              ),
-                                              Text(
+                                              children: [
+                                                Text(
+                                                  snapshot.incomeTextFormValues
+                                                      .value[index].currentTime,
+                                                  style: const TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 111, 110, 110),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 13,
+                                                ),
+                                                Text(
                                                   " - \u{20B9} ${snapshot.incomeTextFormValues.value[index].expenseAmount}",
                                                   style: const TextStyle(
                                                     color: Colors.red,
                                                   ),
                                                 ),
-                                            ],
-                                          ),
+                                              ],
+                                            ),
                                     ),
                                   );
                                 },
@@ -386,7 +400,8 @@ class _HomePageState extends State<HomePage> {
             foregroundColor: teal,
             elevation: 8,
             onPressed: () {
-              Navigator.of(context).push(AnimationClass().navigateToAddBudgetPage());
+              Navigator.of(context)
+                  .push(AnimationClass().navigateToAddBudgetPage());
             },
             child: const Icon(Icons.add),
           ),

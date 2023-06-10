@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:money_management_app/UI/addBugdet/addbudgetprovider.dart';
 import 'package:money_management_app/widget/listtilebudgetwidget.dart';
 import 'package:provider/provider.dart';
 import '../../utils/colors.dart';
@@ -14,6 +15,13 @@ class BudgetPage extends StatefulWidget {
 }
 
 class _BudgetPageState extends State<BudgetPage> {
+  @override
+  void initState() {
+    final budgetProvider = Provider.of<BudgetProvider>(context , listen: false);
+    budgetProvider.getBudgetElement();
+    super.initState();
+    
+  }
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -125,6 +133,7 @@ class _BudgetPageState extends State<BudgetPage> {
                         isBudgeted: true,
                         spendAmount: snapshot.budgetedList[index].spendAmount,
                         remainingAmount: category.remainingAmount,
+                        id: snapshot.budgetedList[index].id!,
                       );
                     },
                   ),
@@ -150,6 +159,7 @@ class _BudgetPageState extends State<BudgetPage> {
                       icon: category.icon,
                       isBudgeted: category.isBudgeted,
                       spendAmount: snapshot.nonBudgetedList[index].spendAmount,
+                      id: snapshot.nonBudgetedList[index].id!,
                     );
                   },
                 ),

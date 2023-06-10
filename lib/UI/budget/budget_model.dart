@@ -14,7 +14,9 @@ class BudgetModel {
   @HiveField(4)
   bool isBudgeted;
   @HiveField(5)
-  IconData icon;
+  String icon;
+  @HiveField(6)
+  int? id;
   BudgetModel(this.setLimitvalue, this.spendAmount, this.remainingAmount,
-      this.categories, this.isBudgeted, this.icon);
+      this.categories, this.isBudgeted, this.icon, this.id);
 }

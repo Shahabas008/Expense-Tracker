@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/adapters.dart';
 part 'model.g.dart';
 
@@ -21,12 +20,12 @@ part 'model.g.dart';
   
   @HiveField(5)
   int selectedIndexHome;
-  
+
   @HiveField(6)
-  IconData categoryIcon;
+  String categoryIcon;
   
   @HiveField(7)
-  Color bgColorOfContainer;
+  String bgColorOfContainer;
   
   @HiveField(8)
   String currentDate;
@@ -48,5 +47,6 @@ part 'model.g.dart';
       this.bgColorOfContainer,
       this.currentDate,
       this.currentTime,
+      this.id
       );
 }

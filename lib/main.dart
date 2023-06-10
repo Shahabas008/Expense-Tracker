@@ -9,9 +9,9 @@ import 'package:money_management_app/widget/bottomnavigationbar.dart';
 import 'package:provider/provider.dart';
 import 'UI/addBugdet/addbudgetprovider.dart';
 
-void main() {
+Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  Hive.initFlutter();
+  await Hive.initFlutter();
   if(!Hive.isAdapterRegistered(BudgetModelAdapter().typeId)){
     Hive.registerAdapter(BudgetModelAdapter());
   }

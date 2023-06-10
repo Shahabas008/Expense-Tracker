@@ -23,11 +23,12 @@ class ValueOfTextFormAdapter extends TypeAdapter<ValueOfTextForm> {
       fields[4] as String,
       fields[3] as String,
       fields[5] as int,
-      fields[6] as IconData,
-      fields[7] as Color,
+      fields[6] as String,
+      fields[7] as String,
       fields[8] as String,
       fields[9] as String,
-    )..id = fields[10] as int?;
+      fields[10] as int?,
+    );
   }
 
   @override

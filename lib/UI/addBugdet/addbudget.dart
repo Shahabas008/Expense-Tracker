@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:money_management_app/UI/addBugdet/addbudgetprovider.dart';
 import 'package:money_management_app/UI/home/model.dart';
@@ -20,15 +21,17 @@ class AddBudget extends StatefulWidget {
       this.note,
       this.selectedContainer,
       this.icon,
-      this.bgColor})
+      this.bgColor,
+      this.id})
       : super(key: key);
+  final int? id;
   final int? incomeAmount;
   final int? expenseAmount;
   final String? title;
   final String? note;
   final int? selectedContainer;
-  final IconData? icon;
-  final Color? bgColor;
+  final String? icon;
+  final String? bgColor;
 
   @override
   State<AddBudget> createState() => _AddBudgetState();
@@ -85,9 +88,8 @@ class _AddBudgetState extends State<AddBudget> {
   @override
   Widget build(BuildContext context) {
     setState(() {
-       currentDate =
-          DateFormat('EEE, MMM dd, yyyy').format(DateTime.now());
-       currentTime = DateFormat("hh:mm a").format(DateTime.now());
+      currentDate = DateFormat('EEE, MMM dd, yyyy').format(DateTime.now());
+      currentTime = DateFormat("hh:mm a").format(DateTime.now());
     });
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
@@ -117,11 +119,15 @@ class _AddBudgetState extends State<AddBudget> {
                       onPressed: () {
                         //Deleting the category from the list
                         snapshot.removeListFromHomePage(
-                            incomeWidgetAmount: widget.incomeAmount!,
-                            expenseWidgetAmount: widget.expenseAmount!,
-                            widgetTitle: widget.title!,
-                            context: context,
-                            selectedContainerIndex: selectedContainerIndex);
+                          id: widget.id!,
+                            // incomeWidgetAmount: widget.incomeAmount!,
+                            // expenseWidgetAmount: widget.expenseAmount!,
+                            // widgetTitle: widget.title!,
+                            // context: context,
+                            // selectedContainerIndex: selectedContainerIndex,
+                            );
+                            Navigator.pop(context);
+                           
                       },
                       icon: Icon(
                         Icons.delete_outline,
@@ -758,31 +764,30 @@ class _AddBudgetState extends State<AddBudget> {
                             ),
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
-                                snapshot.updateListElements(
-                                  titleController: titleController.text.trim(),
-                                  widgetTitle: widget.title!,
-                                  noteController: noteController.text.trim(),
-                                  widgetNote: widget.note!,
-                                  incomeAmountController: int.parse(
-                                      incomeAmountController.text.trim()),
-                                  expenseAmountController: int.parse(
+                                final value = ValueOfTextForm(
+                                  categoryName,
+                                  int.parse(incomeAmountController.text.trim()),
+                                  int.parse(
                                       expenseAmountController.text.trim()),
-                                  widgetIncomeAmount: widget.incomeAmount!,
-                                  widgetExpenseAmount: widget.expenseAmount!,
-                                  context: context,
-                                  widgetSelectedContainerIndex:
-                                      widget.selectedContainer!,
-                                  currentContainerIndex: selectedContainerIndex,
-                                  icon: iconCategory!,
-                                  widgetIcon: widget.icon!,
-                                  widgetContainerColor: widget.bgColor!,
-                                  currentContainerColor: bgColorOfContainer,
+                                  noteController.text.trim(),
+                                  titleController.text.trim(),
+                                  selectedContainerIndex,
+                                  iconCategory!.toString(),
+                                  bgColorOfContainer.toString(),
+                                  currentDate!,
+                                  currentTime!,
+                                  widget.id
+                                );
+                                snapshot.updateListElements(
+                                  value: value,
+                                  id: widget.id!,
                                 );
                                 snapshot.totalSpendAmount(context: context);
                                 snapshot3.categorySpends(context);
                                 snapshot3.categoryRemaining(context);
                                 snapshot.totalRemaining(context);
                               }
+                              Navigator.pop(context);
                             },
                             child: Text(
                               "Update",
@@ -834,11 +839,12 @@ class _AddBudgetState extends State<AddBudget> {
                                   titleController.text.trim(),
                                   selectedContainerIndex,
                                   //saving the icon to access in the homepage.
-                                  iconCategory!,
+                                  iconCategory!.toString(),
                                   //saving the bgColor to access in the homepage.
-                                  bgColorOfContainer,
+                                  bgColorOfContainer.toString(),
                                   currentDate!,
                                   currentTime!,
+                                  widget.id
                                 );
                                 selectedContainerIndex == 1
                                     ? snapshot.addingIncome(access, context)

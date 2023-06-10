@@ -15,13 +15,14 @@ class ListTileWidget extends StatefulWidget {
     required this.isBudgeted,
     required this.spendAmount,
     this.remainingAmount,
+    required this.id,
   }) : super(key: key);
   final String category;
-  final IconData icon;
+  final String icon;
   final bool isBudgeted;
   final int spendAmount;
   final int? remainingAmount;
-
+  final int id;
   @override
   State<ListTileWidget> createState() => _ListTileWidgetState();
 }
@@ -29,24 +30,22 @@ class ListTileWidget extends StatefulWidget {
 class _ListTileWidgetState extends State<ListTileWidget> {
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
     return Consumer<BudgetProvider>(
       builder: (context, snapshot, _) {
         // Find the BudgetModel for the specific category
         BudgetModel? budgetModel = snapshot.setLimit.firstWhere(
           (model) => model.categories == widget.category,
-          orElse: () => BudgetModel(0, 0, 0, '', false, Icons.add),
+          orElse: () => BudgetModel(0, 0, 0, '', false, Icons.add.toString(),0),
         );
 
         TextEditingController setLimitController = TextEditingController();
         TextEditingController updateValueController =
             TextEditingController(text: budgetModel.setLimitvalue.toString());
         return ListTile(
-          leading: Icon(
-            widget.icon,
-            color: black,
-          ),
+          // leading: Icon(
+          //   widget.id,
+          //   color: black,
+          // ),
           title: Text(
             widget.category,
             style: TextStyle(color: black, fontWeight: FontWeight.bold),
@@ -85,7 +84,7 @@ class _ListTileWidgetState extends State<ListTileWidget> {
                                   children: [
                                     Row(
                                       children: [
-                                        Icon(widget.icon),
+                                        // Icon(widget.icon),
                                         const SizedBox(
                                           width: 10,
                                         ),
@@ -203,7 +202,7 @@ class _ListTileWidgetState extends State<ListTileWidget> {
                                   children: [
                                     Row(
                                       children: [
-                                        Icon(widget.icon),
+                                        // Icon(widget.icon),
                                         const SizedBox(
                                           width: 10,
                                         ),
@@ -250,8 +249,9 @@ class _ListTileWidgetState extends State<ListTileWidget> {
                                         widget.category,
                                         isBudgeted = true,
                                         widget.icon,
+                                        widget.id,
                                       );
-                                      snapshot.settingLimit(access, context);
+                                      snapshot.settingLimit(access, context , widget.id);
                                       final provider =
                                           Provider.of<AddListProvider>(context,
                                               listen: false);

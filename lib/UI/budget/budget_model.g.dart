@@ -22,14 +22,15 @@ class BudgetModelAdapter extends TypeAdapter<BudgetModel> {
       fields[2] as int,
       fields[3] as String,
       fields[4] as bool,
-      fields[5] as IconData,
+      fields[5] as String,
+      fields[6] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, BudgetModel obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.setLimitvalue)
       ..writeByte(1)
@@ -41,7 +42,9 @@ class BudgetModelAdapter extends TypeAdapter<BudgetModel> {
       ..writeByte(4)
       ..write(obj.isBudgeted)
       ..writeByte(5)
-      ..write(obj.icon);
+      ..write(obj.icon)
+      ..writeByte(6)
+      ..write(obj.id);
   }
 
   @override
