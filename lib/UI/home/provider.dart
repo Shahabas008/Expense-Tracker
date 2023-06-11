@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
@@ -21,13 +20,13 @@ class AddListProvider extends ChangeNotifier {
     value.id = listId;
     await homePageBox.put(listId, value);
     incomeTextFormValues.value.add(value);
-    final homePageVariableBox =
-        await Hive.openBox<dynamic>("HomePageVariableBox");
+    // final homePageVariableBox =
+    //     await Hive.openBox<dynamic>("HomePageVariableBox");
     incomeHome += value.incomeAmount;
-    await homePageVariableBox.put("incomeHomeHive", incomeHome);
-    incomeHome = await homePageVariableBox.get("incomeHomeHive");
+    // await homePageVariableBox.put("incomeHomeHive", incomeHome);
+    // incomeHome = await homePageVariableBox.get("incomeHomeHive");
     balanceHome += value.incomeAmount;
-    await homePageVariableBox.put("balanceHome", balanceHome);
+    // await homePageVariableBox.put("balanceHome", balanceHome);
     selectedIndexHome = value.selectedIndexHome;
     getHomeElements();
     notifyListeners();
@@ -41,12 +40,12 @@ class AddListProvider extends ChangeNotifier {
     value.id = listId;
     await homePageBox.put(listId, value);
     incomeTextFormValues.value.add(value);
-    final homePageVariableBox =
-        await Hive.openBox<dynamic>("HomePageVariableBox");
+    // final homePageVariableBox =
+    //     await Hive.openBox<dynamic>("HomePageVariableBox");
     balanceHome = balanceHome - value.expenseAmount;
-    await homePageVariableBox.put("balanceHome", balanceHome);
+    // await homePageVariableBox.put("balanceHome", balanceHome);
     expenseHome += value.expenseAmount;
-    await homePageVariableBox.put("expenseHome", expenseHome);
+    // await homePageVariableBox.put("expenseHome", expenseHome);
     selectedIndexHome = value.selectedIndexHome;
     getHomeElements();
     notifyListeners();

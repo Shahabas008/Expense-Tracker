@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:money_management_app/UI/addBugdet/addbudgetprovider.dart';
 import 'package:money_management_app/widget/listtilebudgetwidget.dart';
 import 'package:provider/provider.dart';
 import '../../utils/colors.dart';
@@ -85,7 +84,7 @@ class _BudgetPageState extends State<BudgetPage> {
                             ),
 
                             Text(
-                              "\u{20B9} ${snapshot2.totalSpendValue}",
+                              "\u{20B9} ${snapshot.totalspendAmount}",
                               style: const TextStyle(color: Colors.red),
                             ), // display the Spend
                           ],

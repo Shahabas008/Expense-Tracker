@@ -21,13 +21,14 @@ Future<void> main() async{
   if(!Hive.isAdapterRegistered(ValueOfTextFormAdapter().typeId)){
     Hive.registerAdapter(ValueOfTextFormAdapter());
   }
+  // Hive.deleteBoxFromDisk("HomePageBox");
+  // Hive.deleteBoxFromDisk("NonBudgetedListBox");
+  // Hive.deleteBoxFromDisk("BudgetListBox");
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
- 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(

@@ -35,7 +35,8 @@ class _ListTileWidgetState extends State<ListTileWidget> {
         // Find the BudgetModel for the specific category
         BudgetModel? budgetModel = snapshot.setLimit.firstWhere(
           (model) => model.categories == widget.category,
-          orElse: () => BudgetModel(0, 0, 0, '', false, Icons.add.toString(),0),
+          orElse: () =>
+              BudgetModel(0, 0, 0, '', false, Icons.add.toString(), 0),
         );
 
         TextEditingController setLimitController = TextEditingController();
@@ -70,12 +71,12 @@ class _ListTileWidgetState extends State<ListTileWidget> {
                           scale: curve,
                           child: SingleChildScrollView(
                             child: BackdropFilter(
-                               filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                              filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
                               child: AlertDialog(
                                 insetPadding: const EdgeInsets.symmetric(
-                                    horizontal: 80,
-                                    vertical: 280,
-                                  ),
+                                  horizontal: 80,
+                                  vertical: 280,
+                                ),
                                 title: const Text(
                                   "Edit Budget",
                                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -109,12 +110,11 @@ class _ListTileWidgetState extends State<ListTileWidget> {
                                   TextButton(
                                     onPressed: () {
                                       snapshot.removeItems(
-                                          budgetModel: budgetModel,
-                                          context: context,
-                                          category: widget.category,
                                           amount:
-                                              updateValueController.text.trim());
-                                      snapshot.categorySpends(context);
+                                              updateValueController.text.trim(),
+                                          id: widget.id);
+                                      snapshot.categorySpends();
+                                      Navigator.pop(context);
                                     },
                                     child: const Text(
                                       "Delete",
@@ -140,9 +140,10 @@ class _ListTileWidgetState extends State<ListTileWidget> {
                                           updateValueController:
                                               updateValueController,
                                           context: context,
-                                          category: widget.category);
-                                      snapshot.updateTotalBudget();
-                                      snapshot.categoryRemaining(context);
+                                          category: widget.category,
+                                          id: widget.id);
+                                      snapshot.categoryRemaining();
+                                      Navigator.pop(context);
                                     },
                                     child: Text(
                                       "Update",
@@ -188,7 +189,7 @@ class _ListTileWidgetState extends State<ListTileWidget> {
                           scale: curve,
                           child: SingleChildScrollView(
                             child: BackdropFilter(
-                               filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                              filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
                               child: AlertDialog(
                                 insetPadding: const EdgeInsets.symmetric(
                                   horizontal: 80,
@@ -242,21 +243,21 @@ class _ListTileWidgetState extends State<ListTileWidget> {
                                         int.parse(
                                           setLimitController.text.trim(),
                                         ),
-                                        int.parse(
-                                          setLimitController.text.trim(),
-                                        ),
+                                        0,
                                         0,
                                         widget.category,
                                         isBudgeted = true,
                                         widget.icon,
                                         widget.id,
                                       );
-                                      snapshot.settingLimit(access, context , widget.id);
+                                      snapshot.settingLimit(
+                                          access, context, widget.id);
                                       final provider =
                                           Provider.of<AddListProvider>(context,
                                               listen: false);
-                                      provider.totalSpendAmount(context: context);
-                                      snapshot.categoryRemaining(context);
+                                      provider.totalSpendAmount(
+                                          context: context);
+                                      snapshot.categoryRemaining();
                                       Navigator.pop(context);
                                     },
                                     child: Text(

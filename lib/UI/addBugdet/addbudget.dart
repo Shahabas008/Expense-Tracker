@@ -783,8 +783,8 @@ class _AddBudgetState extends State<AddBudget> {
                                   id: widget.id!,
                                 );
                                 snapshot.totalSpendAmount(context: context);
-                                snapshot3.categorySpends(context);
-                                snapshot3.categoryRemaining(context);
+                                snapshot3.categorySpends();
+                                snapshot3.categoryRemaining();
                                 snapshot.totalRemaining(context);
                               }
                               Navigator.pop(context);
@@ -867,8 +867,8 @@ class _AddBudgetState extends State<AddBudget> {
                                     }
                                   }
                                 }
-                                snapshot3.categorySpends(context);
-                                snapshot3.categoryRemaining(context);
+                                snapshot3.categorySpends();
+                                snapshot3.categoryRemaining();
                               }
                               Navigator.pop(context);
                             },
