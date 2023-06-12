@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:money_management_app/UI/budget/budget_model.dart';
 import 'package:money_management_app/UI/budget/budget_provider.dart';
 import 'package:provider/provider.dart';
@@ -96,6 +97,7 @@ class _ListTileWidgetState extends State<ListTileWidget> {
                                       height: 10,
                                     ),
                                     TextFormField(
+                                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                       keyboardType: TextInputType.number,
                                       cursorColor: teal,
                                       controller: updateValueController,

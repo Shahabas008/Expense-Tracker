@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import '../../utils/colors.dart';
 import '../budget/budget_provider.dart';
 import 'model.dart';
 
@@ -51,8 +52,12 @@ class AddListProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool isIncomeExpenseDataLoading = false;
+
   //DISPLAY THE HIVE DATA TO THE HOME PAGE ( INCOME AND EXPENSE )
   Future<void> getHomeElements() async {
+    isIncomeExpenseDataLoading = true;
+    notifyListeners();
     final homePageBox = await Hive.openBox<ValueOfTextForm>("HomePageBox");
     incomeTextFormValues.value.clear();
     expenseHome = 0;
@@ -65,6 +70,8 @@ class AddListProvider extends ChangeNotifier {
       balanceHome = incomeHome - expenseHome;
     }
     incomeTextFormValues.value.addAll(incomeExpenseList);
+    isIncomeExpenseDataLoading = false;
+    notifyListeners();
   }
 
   //UPDATING THE ELEMENT OF THE LIST TO DISPLAY IN THE HOME PAGE
@@ -75,9 +82,9 @@ class AddListProvider extends ChangeNotifier {
     final homePageBox = await Hive.openBox<ValueOfTextForm>("HomePageBox");
     homePageBox.put(id, value);
     final indexOfCategory = homePageBox.get(id);
-    indexOfCategory!.selectedIndexHome == 1 
-    ? indexOfCategory.expenseAmount = 0
-    : indexOfCategory.incomeAmount = 0 ;
+    indexOfCategory!.selectedIndexHome == 1
+        ? indexOfCategory.expenseAmount = 0
+        : indexOfCategory.incomeAmount = 0;
     getHomeElements();
     notifyListeners();
   }
@@ -129,5 +136,14 @@ class AddListProvider extends ChangeNotifier {
     totalSpendAmount(context: context);
     final provider = Provider.of<BudgetProvider>(context, listen: false);
     provider.totalRemaining = provider.totalBudget - totalSpendValue;
+  }
+
+  int selectedContainerIndex = 1;
+
+  void changeColor({
+    required int containerIndex,
+  }) {
+    selectedContainerIndex = containerIndex;
+    notifyListeners();
   }
 }

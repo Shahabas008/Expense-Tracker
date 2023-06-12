@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:money_management_app/UI/budget/budgetpage.dart';
 import 'package:money_management_app/UI/home/homepage.dart';
+import 'package:money_management_app/UI/home/provider.dart';
 import 'package:money_management_app/UI/setting.dart';
 import 'package:money_management_app/UI/stats.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/colors.dart';
 
@@ -14,6 +16,7 @@ class BottomNavigationBarPage extends StatefulWidget {
       _BottomNavigationBarPageState();
 }
 
+
 class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
   int _selectedIndex = 0;
 
@@ -23,6 +26,14 @@ class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
     const StatsPage(),
     const MorePage(),
   ];
+
+  @override
+  void initState() {
+    final homeProvider = Provider.of<AddListProvider>(context, listen: false);
+    Future.microtask(() async =>   await  homeProvider.getHomeElements()
+    );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

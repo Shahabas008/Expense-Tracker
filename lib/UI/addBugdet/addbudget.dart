@@ -43,9 +43,6 @@ class _AddBudgetState extends State<AddBudget> {
   TextEditingController titleController = TextEditingController();
   TextEditingController noteController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  int selectedContainerIndex = 1;
-  Color container1Color = teal;
-  Color container2Color = Colors.grey;
   bool isExpanded = true;
   GlobalKey widgetKey = GlobalKey();
   double childHeight = 0.0;
@@ -55,10 +52,13 @@ class _AddBudgetState extends State<AddBudget> {
   String categoryName = "";
   String? currentDate;
   String? currentTime;
+  int? selectedContainerIndex;
 
   @override
   void initState() {
     super.initState();
+    currentDate = DateFormat('EEE, MMM dd, yyyy').format(DateTime.now());
+    currentTime = DateFormat("hh:mm a").format(DateTime.now());
     if (widget.title != null) {
       isEdit = true;
       final incomeAmount = widget.incomeAmount;
@@ -74,23 +74,19 @@ class _AddBudgetState extends State<AddBudget> {
     }
   }
 
-  void changeColor(int containerIndex) {
-    setState(() {
-      selectedContainerIndex = containerIndex;
-      if (containerIndex == 1) {
-        container1Color = teal;
-      } else if (containerIndex == 2) {
-        container1Color = teal;
-      }
-    });
-  }
+  // void changeColor(int containerIndex) {
+  //   setState(() {
+  //     snapshot.selectedContainerIndex = containerIndex;
+  //     if (containerIndex == 1) {
+  //       snapshot.container1Color = teal;
+  //     } else if (containerIndex == 2) {
+  //       snapshot.container1Color = teal;
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      currentDate = DateFormat('EEE, MMM dd, yyyy').format(DateTime.now());
-      currentTime = DateFormat("hh:mm a").format(DateTime.now());
-    });
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     return Consumer3<AddListProvider, AddBudgetProvider, BudgetProvider>(
@@ -120,14 +116,13 @@ class _AddBudgetState extends State<AddBudget> {
                         //Deleting the category from the list
                         snapshot.removeListFromHomePage(
                           id: widget.id!,
-                            // incomeWidgetAmount: widget.incomeAmount!,
-                            // expenseWidgetAmount: widget.expenseAmount!,
-                            // widgetTitle: widget.title!,
-                            // context: context,
-                            // selectedContainerIndex: selectedContainerIndex,
-                            );
-                            Navigator.pop(context);
-                           
+                          // incomeWidgetAmount: widget.incomeAmount!,
+                          // expenseWidgetAmount: widget.expenseAmount!,
+                          // widgetTitle: widget.title!,
+                          // context: context,
+                          // snapshot.selectedContainerIndex: snapshot.selectedContainerIndex,
+                        );
+                        Navigator.pop(context);
                       },
                       icon: Icon(
                         Icons.delete_outline,
@@ -148,7 +143,7 @@ class _AddBudgetState extends State<AddBudget> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            changeColor(1);
+                            snapshot.changeColor(containerIndex: 1);
                           },
                           child: Material(
                             color: white,
@@ -156,7 +151,7 @@ class _AddBudgetState extends State<AddBudget> {
                             borderRadius: const BorderRadius.all(
                               Radius.circular(20),
                             ),
-                            shadowColor: selectedContainerIndex == 1
+                            shadowColor: snapshot.selectedContainerIndex == 1
                                 ? Colors.transparent
                                 : black,
                             child: Container(
@@ -167,9 +162,9 @@ class _AddBudgetState extends State<AddBudget> {
                                   Radius.circular(20),
                                 ),
                                 border: Border.all(
-                                  color: selectedContainerIndex == 1
-                                      ? container1Color
-                                      : container2Color,
+                                  color: snapshot.selectedContainerIndex == 1
+                                      ? teal
+                                      : Colors.grey,
                                 ),
                               ),
                               child: Row(
@@ -181,14 +176,15 @@ class _AddBudgetState extends State<AddBudget> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
-                                      color: selectedContainerIndex == 1
-                                          ? black
-                                          : primary,
+                                      color:
+                                          snapshot.selectedContainerIndex == 1
+                                              ? black
+                                              : primary,
                                     ),
                                   ),
                                   Icon(
                                     Icons.arrow_upward_outlined,
-                                    color: selectedContainerIndex == 1
+                                    color: snapshot.selectedContainerIndex == 1
                                         ? Colors.green
                                         : primary,
                                   ),
@@ -202,8 +198,8 @@ class _AddBudgetState extends State<AddBudget> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            changeColor(2);
-                            selectedContainerIndex = 2;
+                            snapshot.changeColor(containerIndex: 2);
+                            snapshot.selectedContainerIndex = 2;
                           },
                           child: Material(
                             color: white,
@@ -211,7 +207,7 @@ class _AddBudgetState extends State<AddBudget> {
                             borderRadius: const BorderRadius.all(
                               Radius.circular(20),
                             ),
-                            shadowColor: selectedContainerIndex == 2
+                            shadowColor: snapshot.selectedContainerIndex == 2
                                 ? Colors.transparent
                                 : black,
                             child: Container(
@@ -221,9 +217,9 @@ class _AddBudgetState extends State<AddBudget> {
                                 borderRadius:
                                     const BorderRadius.all(Radius.circular(20)),
                                 border: Border.all(
-                                  color: selectedContainerIndex == 2
-                                      ? container1Color
-                                      : container2Color,
+                                  color: snapshot.selectedContainerIndex == 2
+                                      ? teal
+                                      : Colors.grey,
                                 ),
                               ),
                               child: Row(
@@ -235,14 +231,15 @@ class _AddBudgetState extends State<AddBudget> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
-                                      color: selectedContainerIndex == 2
-                                          ? black
-                                          : primary,
+                                      color:
+                                          snapshot.selectedContainerIndex == 2
+                                              ? black
+                                              : primary,
                                     ),
                                   ),
                                   Icon(
                                     Icons.arrow_downward_outlined,
-                                    color: selectedContainerIndex == 2
+                                    color: snapshot.selectedContainerIndex == 2
                                         ? Colors.red
                                         : primary,
                                   ),
@@ -307,7 +304,7 @@ class _AddBudgetState extends State<AddBudget> {
                     const SizedBox(
                       height: 20,
                     ),
-                    selectedContainerIndex == 1
+                    snapshot.selectedContainerIndex == 1
                         ? TextFormField(
                             validator: (value) {
                               if (value!.isEmpty) {
@@ -409,9 +406,9 @@ class _AddBudgetState extends State<AddBudget> {
                     const SizedBox(
                       height: 20,
                     ),
-                    selectedContainerIndex == 1
+                    snapshot.selectedContainerIndex == 1
                         ?
-                        //container for the income
+                        //CATEGORY CONTAINER FOR THE INCOME
                         Container(
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
@@ -765,19 +762,19 @@ class _AddBudgetState extends State<AddBudget> {
                             onPressed: () {
                               if (formKey.currentState!.validate()) {
                                 final value = ValueOfTextForm(
-                                  categoryName,
-                                  int.parse(incomeAmountController.text.trim()),
-                                  int.parse(
-                                      expenseAmountController.text.trim()),
-                                  noteController.text.trim(),
-                                  titleController.text.trim(),
-                                  selectedContainerIndex,
-                                  iconCategory!.toString(),
-                                  bgColorOfContainer.toString(),
-                                  currentDate!,
-                                  currentTime!,
-                                  widget.id
-                                );
+                                    categoryName,
+                                    int.parse(
+                                        incomeAmountController.text.trim()),
+                                    int.parse(
+                                        expenseAmountController.text.trim()),
+                                    noteController.text.trim(),
+                                    titleController.text.trim(),
+                                    snapshot.selectedContainerIndex,
+                                    iconCategory!.toString(),
+                                    bgColorOfContainer.toString(),
+                                    currentDate!,
+                                    currentTime!,
+                                    widget.id);
                                 snapshot.updateListElements(
                                   value: value,
                                   id: widget.id!,
@@ -801,6 +798,9 @@ class _AddBudgetState extends State<AddBudget> {
                               minimumSize: Size(width * 1.5, height * 0.07),
                             ),
                             onPressed: () {
+                              //To get the latest time and date, while storing data.
+                              currentDate = DateFormat('EEE, MMM dd, yyyy').format(DateTime.now());
+                              currentTime = DateFormat("hh:mm a").format(DateTime.now());
                               if (iconCategory == null) {
                                 Snack.showSnackbar(
                                     context: context,
@@ -832,25 +832,24 @@ class _AddBudgetState extends State<AddBudget> {
                                   }
                                 }
                                 final access = ValueOfTextForm(
-                                  categoryName,
-                                  incomeAmount,
-                                  expenseAmount,
-                                  noteController.text.trim(),
-                                  titleController.text.trim(),
-                                  selectedContainerIndex,
-                                  //saving the icon to access in the homepage.
-                                  iconCategory!.toString(),
-                                  //saving the bgColor to access in the homepage.
-                                  bgColorOfContainer.toString(),
-                                  currentDate!,
-                                  currentTime!,
-                                  widget.id
-                                );
-                                selectedContainerIndex == 1
+                                    categoryName,
+                                    incomeAmount,
+                                    expenseAmount,
+                                    noteController.text.trim(),
+                                    titleController.text.trim(),
+                                    snapshot.selectedContainerIndex,
+                                    //saving the icon to access in the homepage.
+                                    iconCategory!.toString(),
+                                    //saving the bgColor to access in the homepage.
+                                    bgColorOfContainer.toString(),
+                                    currentDate!,
+                                    currentTime!,
+                                    widget.id);
+                                snapshot.selectedContainerIndex == 1
                                     ? snapshot.addingIncome(access, context)
                                     : snapshot.addingExpense(access, context);
 
-                                if (selectedContainerIndex == 2) {
+                                if (snapshot.selectedContainerIndex == 2) {
                                   snapshot.totalSpendAmount(context: context);
                                   snapshot3.totalRemaining =
                                       snapshot3.totalBudget -
