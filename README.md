@@ -4,20 +4,20 @@ Coin control is an Expense Tracker Application that helps to manage money flow o
 
 # PACKAGES
 
-  pie_chart: 5.3.2
-  provider: ^6.0.5
-  intl: ^0.18.1
-  shared_preferences: ^2.1.1
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
+* pie_chart: 5.3.2
+* provider: ^6.0.5
+* intl: ^0.18.1
+* shared_preferences: ^2.1.1
+* hive: ^2.2.3
+* hive_flutter: ^1.1.0
 
 # FEATURES
 
 
-Users have the option to enter the income and expense transactions to the application.
-Users can separate the expense through categories (Food , Bills etc.).
-Application provides a feature that a user can set a limit amount to each expense categories.
-The Application provides different currency symbol that the user has no restriction on countries.
+* Users have the option to enter the income and expense transactions to the application.
+* Users can separate the expense through categories (Food , Bills etc.).
+* Application provides a feature that a user can set a limit amount to each expense categories.
+* The Application provides different currency symbol that the user has no restriction on countries.
 
 
 # SCREENSHOTS
