@@ -3,7 +3,7 @@
 Coin control is an Expense Tracker Application that helps to manage money flow of users. The Application is developed using Flutter, Provider and Hive.
 
 # PACKAGES
---------------------
+
   pie_chart: 5.3.2
   provider: ^6.0.5
   intl: ^0.18.1
@@ -12,7 +12,7 @@ Coin control is an Expense Tracker Application that helps to manage money flow o
   hive_flutter: ^1.1.0
 
 # FEATURES
-----------------
+
 
 Users have the option to enter the income and expense transactions to the application.
 Users can separate the expense through categories (Food , Bills etc.).
@@ -21,7 +21,7 @@ The Application provides different currency symbol that the user has no restrict
 
 
 # SCREENSHOTS
-----------------------
+
 
 ![Screenshot 2023-06-13 194605](https://github.com/Shahabas008/Expense-Tracker/assets/109640095/93966e19-8aa6-4c1f-8736-d1a3bd0af57a)
 ![Screenshot 2023-06-13 194651](https://github.com/Shahabas008/Expense-Tracker/assets/109640095/e9eb8f64-940d-42dd-ae34-49dd1f7ac962)
