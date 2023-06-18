@@ -50,7 +50,8 @@ class _HomePageState extends State<HomePage> {
           ),
           body: Padding(
             padding: const EdgeInsets.all(10.0),
-            child: SingleChildScrollView(
+            child: SizedBox(
+              height: height,
               child: Column(
                 children: [
                   const SizedBox(
@@ -217,7 +218,7 @@ class _HomePageState extends State<HomePage> {
                               width: double.infinity,
                               height: height * 0.3,
                               child: Image.asset(
-                                "asset/HOMEPAGE.png",
+                                "asset/images/HOMEPAGE.png",
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -242,7 +243,8 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         )
-                      : Column(
+                      : Expanded(
+                        child: Column(
                           children: [
                             Align(
                               alignment: Alignment.centerLeft,
@@ -265,9 +267,10 @@ class _HomePageState extends State<HomePage> {
                             const SizedBox(
                               height: 20.0,
                             ),
-                            SizedBox(
-                              height: height,
+                            Expanded(
                               child: ListView.separated(
+                                scrollDirection: Axis.vertical,
+                                shrinkWrap: true,
                                 separatorBuilder:
                                     (BuildContext context, int index) {
                                   return Divider(
@@ -316,71 +319,60 @@ class _HomePageState extends State<HomePage> {
                                       );
                                     },
                                     child: ListTile(
-                                      // leading: Icon(
-                                      //   snapshot.incomeTextFormValues
-                                      //       .value[index].categoryIcon,
-                                      //   color: snapshot.incomeTextFormValues
-                                      //       .value[index].bgColorOfContainer,
-                                      // ),
+                                      leading: Icon(
+                                        // snapshot.incomeTextFormValues
+                                        //     .value[index].categoryIcon,
+                                        // color: snapshot.incomeTextFormValues
+                                        //     .value[index].bgColorOfContainer,
+                                      ),
                                       //display the category icon here
-                                      subtitle: Text(snapshot
-                                          .incomeTextFormValues
-                                          .value[index]
-                                          .note),
+                                      subtitle: Text(
+                                        snapshot.incomeTextFormValues
+                                            .value[index].note,
+                                        style: const TextStyle(
+                                          fontSize: 15.0,
+                                        ),
+                                      ),
                                       title: Text(
                                         snapshot.incomeTextFormValues
                                             .value[index].title,
                                         style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18.0,
                                         ),
                                       ),
-                                      trailing: snapshot
-                                                  .incomeTextFormValues
-                                                  .value[index]
-                                                  .selectedIndexHome ==
-                                              1
-                                          ? Column(
-                                              children: [
-                                                Text(
-                                                  snapshot.incomeTextFormValues
-                                                      .value[index].currentTime,
-                                                  style: const TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 111, 110, 110),
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 13,
-                                                ),
-                                                Text(
+                                      trailing: Column(
+                                        children: [
+                                          Text(
+                                            snapshot.incomeTextFormValues
+                                                .value[index].currentTime,
+                                            style: const TextStyle(
+                                              color: Color.fromARGB(
+                                                  255, 111, 110, 110),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 13,
+                                          ),
+                                          snapshot
+                                                      .incomeTextFormValues
+                                                      .value[index]
+                                                      .selectedIndexHome ==
+                                                  1
+                                              ? Text(
                                                   "+ \u{20B9} ${snapshot.incomeTextFormValues.value[index].incomeAmount}",
                                                   style: const TextStyle(
                                                     color: Colors.green,
                                                   ),
-                                                ),
-                                              ],
-                                            )
-                                          : Column(
-                                              children: [
-                                                Text(
-                                                  snapshot.incomeTextFormValues
-                                                      .value[index].currentTime,
-                                                  style: const TextStyle(
-                                                    color: Color.fromARGB(
-                                                        255, 111, 110, 110),
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 13,
-                                                ),
-                                                Text(
+                                                )
+                                              : Text(
                                                   " - \u{20B9} ${snapshot.incomeTextFormValues.value[index].expenseAmount}",
                                                   style: const TextStyle(
                                                     color: Colors.red,
                                                   ),
                                                 ),
-                                              ],
-                                            ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 },
@@ -388,6 +380,7 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ],
                         ),
+                      ),
                 ],
               ),
             ),

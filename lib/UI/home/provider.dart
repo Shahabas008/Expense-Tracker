@@ -20,13 +20,8 @@ class AddListProvider extends ChangeNotifier {
     value.id = listId;
     await homePageBox.put(listId, value);
     incomeTextFormValues.value.add(value);
-    // final homePageVariableBox =
-    //     await Hive.openBox<dynamic>("HomePageVariableBox");
     incomeHome += value.incomeAmount;
-    // await homePageVariableBox.put("incomeHomeHive", incomeHome);
-    // incomeHome = await homePageVariableBox.get("incomeHomeHive");
     balanceHome += value.incomeAmount;
-    // await homePageVariableBox.put("balanceHome", balanceHome);
     selectedIndexHome = value.selectedIndexHome;
     getHomeElements();
     notifyListeners();

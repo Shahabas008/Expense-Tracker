@@ -46,7 +46,7 @@ class _BudgetPageState extends State<BudgetPage> {
                           width: width * 0.65,
                           height: height * 0.25,
                           child: Image.asset(
-                            "asset/notbudgeted.png",
+                            "asset/images/notbudgeted.png",
                             fit: BoxFit.fill,
                           ),
                         ),
