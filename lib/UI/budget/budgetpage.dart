@@ -19,7 +19,6 @@ class _BudgetPageState extends State<BudgetPage> {
     final budgetProvider = Provider.of<BudgetProvider>(context , listen: false);
     budgetProvider.getBudgetElement();
     super.initState();
-    
   }
   @override
   Widget build(BuildContext context) {
@@ -120,22 +119,20 @@ class _BudgetPageState extends State<BudgetPage> {
                     ),
               Visibility(
                 visible: snapshot.budgetedList.isNotEmpty,
-                child: SizedBox(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: snapshot.budgetedList.length,
-                    itemBuilder: (context, index) {
-                      BudgetModel category = snapshot.budgetedList[index];
-                      return ListTileWidget(
-                        category: category.categories,
-                        icon: category.icon,
-                        isBudgeted: true,
-                        spendAmount: snapshot.budgetedList[index].spendAmount,
-                        remainingAmount: category.remainingAmount,
-                        id: snapshot.budgetedList[index].id!,
-                      );
-                    },
-                  ),
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: snapshot.budgetedList.length,
+                  itemBuilder: (context, index) {
+                    BudgetModel category = snapshot.budgetedList[index];
+                    return ListTileWidget(
+                      category: category.categories,
+                      icon: category.icon,
+                      isBudgeted: true,
+                      spendAmount: snapshot.budgetedList[index].spendAmount,
+                      remainingAmount: category.remainingAmount,
+                      id: snapshot.budgetedList[index].id!,
+                    );
+                  },
                 ),
               ),
               const SizedBox(

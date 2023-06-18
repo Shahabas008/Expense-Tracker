@@ -18,8 +18,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
-    final homeProvider = Provider.of<AddListProvider>(context, listen: false);
-    homeProvider.getHomeElements();
+    // final homeProvider = Provider.of<AddListProvider>(context, listen: false);
+    // Future.microtask(() =>     homeProvider.getHomeElements()
+    // );
     super.initState();
   }
 
@@ -127,6 +128,12 @@ class _HomePageState extends State<HomePage> {
                             border: Border.all(
                               color: primary,
                             ),
+                            // boxShadow: [
+                    //         BoxShadow(
+                    //         blurRadius: 10.0,spreadRadius: 2
+                    //       ),
+                    //
+                    // ],
                             borderRadius: const BorderRadius.all(
                               Radius.circular(
                                 20,
@@ -210,6 +217,8 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(
                     height: 25.0,
                   ),
+
+                  snapshot.isIncomeExpenseDataLoading ? CircularProgressIndicator() :
                   snapshot.incomeTextFormValues.value.isEmpty
                       ? Column(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -277,7 +286,7 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.grey.shade300,
                                     height: 15.0,
                                     thickness: 1.0,
-                                    indent: 60.0,
+                                    indent: 10.0,
                                     endIndent: 10.0,
                                   );
                                 },
