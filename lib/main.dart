@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:money_management_app/UI/Settings/setting.dart';
 import 'package:money_management_app/UI/addBugdet/addbudgetmodel.dart';
 import 'package:money_management_app/UI/budget/budget_model.dart';
 import 'package:money_management_app/UI/budget/budget_provider.dart';
@@ -42,7 +43,7 @@ class MyApp extends StatelessWidget {
           fontFamily: "DMSans",
         ),
         debugShowCheckedModeBanner: false,
-        home: BottomNavigationBarPage(),
+        home: const MorePage(),
       ),
     );
   }

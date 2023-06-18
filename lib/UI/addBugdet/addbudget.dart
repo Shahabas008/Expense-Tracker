@@ -46,7 +46,7 @@ class _AddBudgetState extends State<AddBudget> {
   bool isExpanded = true;
   GlobalKey widgetKey = GlobalKey();
   double childHeight = 0.0;
-  IconData? iconCategory;
+  Icon? iconCategory;
   Color bgColorOfContainer = Colors.transparent;
   bool isEdit = false;
   String categoryName = "";
@@ -467,9 +467,11 @@ class _AddBudgetState extends State<AddBudget> {
                                                           .incomeContainerList[
                                                               index]
                                                           .containerIndex);
-                                              iconCategory = snapshot2
-                                                  .incomeContainerList[index]
-                                                  .icon;
+                                              iconCategory = Icon(
+                                                  snapshot2
+                                                      .incomeContainerList[index]
+                                                      .icon
+                                              );
                                               bgColorOfContainer = snapshot2
                                                   .incomeContainerList[index]
                                                   .bgcolor;
@@ -616,9 +618,11 @@ class _AddBudgetState extends State<AddBudget> {
                                                           .expenseContainerList[
                                                               index]
                                                           .containerIndex);
-                                              iconCategory = snapshot2
-                                                  .expenseContainerList[index]
-                                                  .icon;
+                                              iconCategory = Icon(
+                                                  snapshot2
+                                                      .expenseContainerList[index]
+                                                      .icon
+                                              );
                                               bgColorOfContainer = snapshot2
                                                   .expenseContainerList[index]
                                                   .bgcolor;

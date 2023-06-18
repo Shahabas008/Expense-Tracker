@@ -41,7 +41,7 @@ class StatsPage extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 height: height*0.45,
-                child: Image.asset("asset/stats.png",
+                child: Image.asset("asset/images/stats.png",
                 fit: BoxFit.fill,
                ),
               ),

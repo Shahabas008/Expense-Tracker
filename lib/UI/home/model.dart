@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/adapters.dart';
 part 'model.g.dart';
 

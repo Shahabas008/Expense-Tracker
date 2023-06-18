@@ -317,8 +317,8 @@ class _HomePageState extends State<HomePage> {
                                                 .incomeTextFormValues
                                                 .value[index]
                                                 .selectedIndexHome,
-                                            icon: snapshot.incomeTextFormValues
-                                                .value[index].categoryIcon,
+                                            icon:snapshot.incomeTextFormValues
+                                                .value[index].categoryIcon.toString(),
                                             bgColor: snapshot
                                                 .incomeTextFormValues
                                                 .value[index]
@@ -328,12 +328,12 @@ class _HomePageState extends State<HomePage> {
                                       );
                                     },
                                     child: ListTile(
-                                      leading: Icon(
-                                        // snapshot.incomeTextFormValues
-                                        //     .value[index].categoryIcon,
+                                      // leading:
+                                      //   snapshot.incomeTextFormValues
+                                      //       .value[index].categoryIcon,
                                         // color: snapshot.incomeTextFormValues
                                         //     .value[index].bgColorOfContainer,
-                                      ),
+
                                       //display the category icon here
                                       subtitle: Text(
                                         snapshot.incomeTextFormValues
