@@ -109,7 +109,7 @@ class AddBudgetProvider extends ChangeNotifier {
   //INCOME SECTION
   int incomeSelectedIndex = 0;
   String incomeCategoryName = '';
-  IconData incomeIconOfCategory = Icons.abc;
+  late IconData incomeIconOfCategory;
 
   void incomeSelectedContainerColorChange(int newIndex) {
     incomeSelectedIndex = newIndex;

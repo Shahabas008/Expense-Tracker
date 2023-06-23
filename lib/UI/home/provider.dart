@@ -10,7 +10,6 @@ class AddListProvider extends ChangeNotifier {
   int incomeHome = 0;
   int expenseHome = 0;
   int balanceHome = 0;
-  late int selectedIndexHome;
   ValueNotifier<List<ValueOfTextForm>> incomeTextFormValues = ValueNotifier([]);
 
   //Functions
@@ -23,7 +22,6 @@ class AddListProvider extends ChangeNotifier {
     incomeTextFormValues.value.add(value);
     incomeHome += value.incomeAmount;
     balanceHome += value.incomeAmount;
-    selectedIndexHome = value.selectedIndexHome;
     getHomeElements();
     notifyListeners();
   }
@@ -36,13 +34,8 @@ class AddListProvider extends ChangeNotifier {
     value.id = listId;
     await homePageBox.put(listId, value);
     incomeTextFormValues.value.add(value);
-    // final homePageVariableBox =
-    //     await Hive.openBox<dynamic>("HomePageVariableBox");
     balanceHome = balanceHome - value.expenseAmount;
-    // await homePageVariableBox.put("balanceHome", balanceHome);
     expenseHome += value.expenseAmount;
-    // await homePageVariableBox.put("expenseHome", expenseHome);
-    selectedIndexHome = value.selectedIndexHome;
     getHomeElements();
     notifyListeners();
   }

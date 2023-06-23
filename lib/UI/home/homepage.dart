@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:money_management_app/UI/addBugdet/addbudget.dart';
@@ -16,13 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  @override
-  void initState() {
-    // final homeProvider = Provider.of<AddListProvider>(context, listen: false);
-    // Future.microtask(() =>     homeProvider.getHomeElements()
-    // );
-    super.initState();
-  }
+  DateTime currentDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +51,53 @@ class _HomePageState extends State<HomePage> {
               height: height,
               child: Column(
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            currentDate = currentDate.subtract(
+                              const Duration(
+                                days: 30,
+                              ),
+                            );
+                          });
+                        },
+                        icon: const Icon(
+                          Icons.chevron_left,
+                          color: Colors.black,
+                          size: 18.0,
+                        ),
+                      ),
+                      Text(
+                        DateFormat('MMMM y').format(
+                          currentDate,
+                        ),
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            currentDate = currentDate.add(
+                              const Duration(
+                                days: 30,
+                              ),
+                            );
+                          });
+                        },
+                        icon: const Icon(
+                          Icons.chevron_right,
+                          color: Colors.black,
+                          size: 18.0,
+                        ),
+                      ),
+                    ],
+                  ),
                   const SizedBox(
                     height: 15,
                   ),
@@ -107,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                                 const Icon(
                                   Icons.attach_money,
                                   color: Colors.green,
-                                )
+                                ),
                               ],
                             ),
                           ),
@@ -128,12 +171,6 @@ class _HomePageState extends State<HomePage> {
                             border: Border.all(
                               color: primary,
                             ),
-                            // boxShadow: [
-                    //         BoxShadow(
-                    //         blurRadius: 10.0,spreadRadius: 2
-                    //       ),
-                    //
-                    // ],
                             borderRadius: const BorderRadius.all(
                               Radius.circular(
                                 20,
@@ -217,179 +254,157 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(
                     height: 25.0,
                   ),
-
-                  snapshot.isIncomeExpenseDataLoading ? CircularProgressIndicator() :
-                  snapshot.incomeTextFormValues.value.isEmpty
-                      ? Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: double.infinity,
-                              height: height * 0.3,
-                              child: Image.asset(
-                                "asset/images/HOMEPAGE.png",
-                                fit: BoxFit.fill,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Text(
-                              "No Transactions",
-                              style: TextStyle(
-                                  color: black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Tap on '+' to add Income/Expense",
-                              style: TextStyle(
-                                color: primary,
-                              ),
-                            ),
-                          ],
-                        )
-                      : Expanded(
-                        child: Column(
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                DateFormat('EEE d MMMM').format(
-                                  DateTime.now(),
+                  snapshot.isIncomeExpenseDataLoading
+                      ? const CircularProgressIndicator()
+                      : snapshot.incomeTextFormValues.value.isEmpty
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: height * 0.3,
+                                  child: Image.asset(
+                                    "asset/images/HOMEPAGE.png",
+                                    fit: BoxFit.fill,
+                                  ),
                                 ),
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                const SizedBox(
+                                  height: 20,
                                 ),
-                              ),
-                            ),
-                            const Divider(
-                              color: Colors.grey,
-                              height: 3.0,
-                              thickness: 1.0,
-                              indent: 0.0,
-                              endIndent: 300.0,
-                            ),
-                            const SizedBox(
-                              height: 20.0,
-                            ),
-                            Expanded(
-                              child: ListView.separated(
-                                scrollDirection: Axis.vertical,
-                                shrinkWrap: true,
-                                separatorBuilder:
-                                    (BuildContext context, int index) {
-                                  return Divider(
-                                    color: Colors.grey.shade300,
-                                    height: 15.0,
-                                    thickness: 1.0,
-                                    indent: 10.0,
-                                    endIndent: 10.0,
-                                  );
-                                },
-                                itemCount:
-                                    snapshot.incomeTextFormValues.value.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  return GestureDetector(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => AddBudget(
-                                            id: snapshot.incomeTextFormValues
-                                                .value[index].id!,
-                                            incomeAmount: snapshot
-                                                .incomeTextFormValues
-                                                .value[index]
-                                                .incomeAmount,
-                                            expenseAmount: snapshot
-                                                .incomeTextFormValues
-                                                .value[index]
-                                                .expenseAmount,
-                                            title: snapshot.incomeTextFormValues
-                                                .value[index].title,
-                                            note: snapshot.incomeTextFormValues
-                                                .value[index].note,
-                                            selectedContainer: snapshot
-                                                .incomeTextFormValues
-                                                .value[index]
-                                                .selectedIndexHome,
-                                            icon:snapshot.incomeTextFormValues
-                                                .value[index].categoryIcon.toString(),
-                                            bgColor: snapshot
-                                                .incomeTextFormValues
-                                                .value[index]
-                                                .bgColorOfContainer,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: ListTile(
-                                      // leading:
-                                      //   snapshot.incomeTextFormValues
-                                      //       .value[index].categoryIcon,
-                                        // color: snapshot.incomeTextFormValues
-                                        //     .value[index].bgColorOfContainer,
-
-                                      //display the category icon here
-                                      subtitle: Text(
-                                        snapshot.incomeTextFormValues
-                                            .value[index].note,
-                                        style: const TextStyle(
-                                          fontSize: 15.0,
-                                        ),
+                                Text(
+                                  "No Transactions",
+                                  style: TextStyle(
+                                      color: black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18),
+                                ),
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Text(
+                                  "Tap on '+' to add Income/Expense",
+                                  style: TextStyle(
+                                    color: primary,
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Expanded(
+                              child: Column(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      DateFormat('EEE d MMMM').format(
+                                        DateTime.now(),
                                       ),
-                                      title: Text(
-                                        snapshot.incomeTextFormValues
-                                            .value[index].title,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 18.0,
-                                        ),
-                                      ),
-                                      trailing: Column(
-                                        children: [
-                                          Text(
-                                            snapshot.incomeTextFormValues
-                                                .value[index].currentTime,
-                                            style: const TextStyle(
-                                              color: Color.fromARGB(
-                                                  255, 111, 110, 110),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 13,
-                                          ),
-                                          snapshot
-                                                      .incomeTextFormValues
-                                                      .value[index]
-                                                      .selectedIndexHome ==
-                                                  1
-                                              ? Text(
-                                                  "+ \u{20B9} ${snapshot.incomeTextFormValues.value[index].incomeAmount}",
-                                                  style: const TextStyle(
-                                                    color: Colors.green,
-                                                  ),
-                                                )
-                                              : Text(
-                                                  " - \u{20B9} ${snapshot.incomeTextFormValues.value[index].expenseAmount}",
-                                                  style: const TextStyle(
-                                                    color: Colors.red,
-                                                  ),
-                                                ),
-                                        ],
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  );
-                                },
+                                  ),
+                                  const Divider(
+                                    color: Colors.grey,
+                                    height: 3.0,
+                                    thickness: 1.0,
+                                    indent: 0.0,
+                                    endIndent: 300.0,
+                                  ),
+                                  const SizedBox(
+                                    height: 20.0,
+                                  ),
+                                  Expanded(
+                                    child: ListView.separated(
+                                      scrollDirection: Axis.vertical,
+                                      shrinkWrap: true,
+                                      separatorBuilder:
+                                          (BuildContext context, int index) {
+                                        return Divider(
+                                          color: Colors.grey.shade300,
+                                          height: 15.0,
+                                          thickness: 1.0,
+                                          indent: 10.0,
+                                          endIndent: 10.0,
+                                        );
+                                      },
+                                      itemCount: snapshot
+                                          .incomeTextFormValues.value.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            final itemIndex = snapshot.incomeTextFormValues.value[index];
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => AddBudget(
+                                                  homePageItems: itemIndex,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: ListTile(
+                                            // leading:
+                                            //   snapshot.incomeTextFormValues
+                                            //       .value[index].categoryIcon,
+                                            // color: snapshot.incomeTextFormValues
+                                            //     .value[index].bgColorOfContainer,
+                                            //display the category icon here
+                                            subtitle: Text(
+                                              snapshot.incomeTextFormValues
+                                                  .value[index].note,
+                                              style: const TextStyle(
+                                                fontSize: 15.0,
+                                              ),
+                                            ),
+                                            title: Text(
+                                              snapshot.incomeTextFormValues
+                                                  .value[index].title,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 18.0,
+                                              ),
+                                            ),
+                                            trailing: Column(
+                                              children: [
+                                                Text(
+                                                  snapshot.incomeTextFormValues
+                                                      .value[index].currentTime,
+                                                  style: const TextStyle(
+                                                    color: Color.fromARGB(
+                                                        255, 111, 110, 110),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 13,
+                                                ),
+                                                snapshot
+                                                            .incomeTextFormValues
+                                                            .value[index]
+                                                            .selectedIndexHome ==
+                                                        1
+                                                    ? Text(
+                                                        "+ \u{20B9} ${snapshot.incomeTextFormValues.value[index].incomeAmount}",
+                                                        style: const TextStyle(
+                                                          color: Colors.green,
+                                                        ),
+                                                      )
+                                                    : Text(
+                                                        " - \u{20B9} ${snapshot.incomeTextFormValues.value[index].expenseAmount}",
+                                                        style: const TextStyle(
+                                                          color: Colors.red,
+                                                        ),
+                                                      ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
                 ],
               ),
             ),

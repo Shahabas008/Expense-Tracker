@@ -4,6 +4,7 @@ import 'package:money_management_app/UI/Settings/setting.dart';
 import 'package:money_management_app/UI/addBugdet/addbudgetmodel.dart';
 import 'package:money_management_app/UI/budget/budget_model.dart';
 import 'package:money_management_app/UI/budget/budget_provider.dart';
+import 'package:money_management_app/UI/home/homepage.dart';
 import 'package:money_management_app/UI/home/model.dart';
 import 'package:money_management_app/UI/home/provider.dart';
 import 'package:money_management_app/widget/bottomnavigationbar.dart';
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
           fontFamily: "DMSans",
         ),
         debugShowCheckedModeBanner: false,
-        home: const MorePage(),
+          home:  const BottomNavigationBarPage(),
       ),
     );
   }

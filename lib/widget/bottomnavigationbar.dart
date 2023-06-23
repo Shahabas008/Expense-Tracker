@@ -16,7 +16,6 @@ class BottomNavigationBarPage extends StatefulWidget {
       _BottomNavigationBarPageState();
 }
 
-
 class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
   int _selectedIndex = 0;
 
@@ -30,8 +29,7 @@ class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
   @override
   void initState() {
     final homeProvider = Provider.of<AddListProvider>(context, listen: false);
-    Future.microtask(() async =>   await  homeProvider.getHomeElements()
-    );
+    Future.microtask(() async => await homeProvider.getHomeElements());
     super.initState();
   }
 
